@@ -1,0 +1,13 @@
+node_modules
+.next
+out
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+
+# capture output
+preview/
+preview-mobile/
+
+.env
+.env.local
