@@ -85,9 +85,22 @@ exporting a plain object from one fails at request time, not at build time.
 Runs on Workers via the OpenNext adapter.
 
 ```bash
-npm run preview   # build the worker and serve it locally through workerd
+npm run build     # next build + the OpenNext worker bundle
+npm run preview   # build, then serve the worker locally through workerd
 npm run deploy    # build and deploy
+npm run build:next  # plain next build, no Cloudflare bundle
 ```
+
+Two script details exist to satisfy Cloudflare Workers Builds, which runs
+`npm run build` and then `npx wrangler deploy`:
+
+- `build` is `opennextjs-cloudflare build`, not `next build`. The deploy step
+  looks for `.open-next/.build/open-next.config.edge.mjs`; a plain Next build
+  never creates it and the deploy dies with *"Could not find compiled Open Next
+  config"*.
+- `open-next.config.ts` sets `buildCommand: "npm run build:next"`. Without it,
+  `opennextjs-cloudflare build` shells out to `npm run build` and re-enters
+  itself forever.
 
 `wrangler.jsonc` is committed on purpose. Left to generate its own, the adapter
 derives the `WORKER_SELF_REFERENCE` service binding from `package.json`'s
