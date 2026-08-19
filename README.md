@@ -80,6 +80,31 @@ Note that `lib/contact.ts` holds the state type and initial value rather than
 `actions.ts`: a `"use server"` module may only export async functions, and
 exporting a plain object from one fails at request time, not at build time.
 
+## Deploying (Cloudflare Workers)
+
+Runs on Workers via the OpenNext adapter.
+
+```bash
+npm run preview   # build the worker and serve it locally through workerd
+npm run deploy    # build and deploy
+```
+
+`wrangler.jsonc` is committed on purpose. Left to generate its own, the adapter
+derives the `WORKER_SELF_REFERENCE` service binding from `package.json`'s
+`name`, which fails the deploy if that differs from the Cloudflare project name:
+
+```
+Service binding 'WORKER_SELF_REFERENCE' references Worker 'dev-portfolio'
+which was not found. [code: 10143]
+```
+
+Both the package name and `wrangler.jsonc` say `josedev`. **If you rename the
+Cloudflare Workers project, change `name` and the `WORKER_SELF_REFERENCE`
+service in `wrangler.jsonc` to match it.**
+
+Env vars for the contact form go in the Workers dashboard under Settings →
+Variables (as secrets), not in `.env` — see `.env.example` for the names.
+
 ## Verifying
 
 A green build proves the types line up. It does not prove the page renders.
@@ -87,6 +112,10 @@ A green build proves the types line up. It does not prove the page renders.
 ```bash
 npx next start -p 3222
 node scripts/verify.mjs
+
+# or against the actual Workers runtime:
+npx wrangler dev --port 3333 --local
+BASE=http://127.0.0.1:3333 node scripts/verify.mjs
 ```
 
 This drives real Chrome across every route and reports status codes, console and
@@ -103,8 +132,8 @@ that something is wrong but not why.
 
 - Project artwork is CSS gradients with mock browser chrome — swap in real
   screenshots or short video loops.
-- The four social links in `components/Footer.tsx` and the cal.com link are
-  `href="#"`.
+- Read.cv, X and LinkedIn in `components/Footer.tsx` and the cal.com link on
+  `/contact` are still `href="#"`. GitHub is wired.
 - Copy, project details, testimonials, stats, prices and the Lisbon location are
   invented. So is `hello@josesebastian.dev`.
 

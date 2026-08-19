@@ -11,3 +11,8 @@ preview-mobile/
 
 .env
 .env.local
+
+# cloudflare / opennext
+.open-next
+.wrangler
+.dev.vars

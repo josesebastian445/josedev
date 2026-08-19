@@ -1,12 +1,15 @@
 {
-  "name": "dev-portfolio",
+  "name": "josedev",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.0",
@@ -19,6 +22,7 @@
     "three": "^0.176.0"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/postcss": "^4.1.4",
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.0",
@@ -27,6 +31,7 @@
     "postcss": "^8.5.3",
     "puppeteer-core": "^24.43.1",
     "tailwindcss": "^4.1.4",
-    "typescript": "^5.8.0"
+    "typescript": "^5.8.0",
+    "wrangler": "^4.124.0"
   }
 }

@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer-core";
 import fs from "node:fs";
 
-const BASE = "http://localhost:3222";
+const BASE = process.env.BASE ?? "http://localhost:3222";
 const OUT = "preview";
 fs.mkdirSync(OUT, { recursive: true });
 
