@@ -5,6 +5,7 @@ import { useMemo, useRef, useEffect } from "react";
 import * as THREE from "three";
 import { simplex3d } from "@/lib/noise.glsl";
 import { scrollStore, startScrollTracking } from "@/lib/scroll-store";
+import { useIsLight } from "@/lib/use-theme-colors";
 
 /* ------------------------------------------------------------------ */
 /* The core object: a noise-displaced icosahedron with a fresnel rim   */
@@ -182,6 +183,7 @@ void main() {
 
 function Dust({ count = 900 }: { count?: number }) {
   const mat = useRef<THREE.ShaderMaterial>(null);
+  const light = useIsLight();
 
   const [positions, scales, speeds] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -205,6 +207,17 @@ function Dust({ count = 900 }: { count?: number }) {
     }),
     []
   );
+
+  // Additive blending only brightens, so lime dust over a white page is
+  // invisible. On light the particles go dark and blend normally instead.
+  useEffect(() => {
+    if (!mat.current) return;
+    mat.current.uniforms.uColor.value.set(light ? "#4a6b00" : "#c8ff2e");
+    mat.current.blending = light
+      ? THREE.NormalBlending
+      : THREE.AdditiveBlending;
+    mat.current.needsUpdate = true;
+  }, [light]);
 
   useFrame((_, delta) => {
     if (!mat.current) return;
@@ -238,6 +251,7 @@ function Dust({ count = 900 }: { count?: number }) {
 
 function Rings() {
   const group = useRef<THREE.Group>(null);
+  const light = useIsLight();
 
   useFrame((state, delta) => {
     if (!group.current) return;
@@ -254,9 +268,17 @@ function Rings() {
         <mesh key={r} rotation={[0, 0, (i * Math.PI) / 5]}>
           <torusGeometry args={[r, 0.004, 8, 220]} />
           <meshBasicMaterial
-            color={i === 1 ? "#c8ff2e" : "#6b5bff"}
+            color={
+              i === 1
+                ? light
+                  ? "#5c8000"
+                  : "#c8ff2e"
+                : light
+                  ? "#4b3ce0"
+                  : "#6b5bff"
+            }
             transparent
-            opacity={i === 1 ? 0.5 : 0.28}
+            opacity={light ? (i === 1 ? 0.4 : 0.22) : i === 1 ? 0.5 : 0.28}
           />
         </mesh>
       ))}

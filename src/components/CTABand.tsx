@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { SplitText } from "./motion-primitives";
+import { SITE } from "@/content/site";
 
 /** Closing call to action shared by every inner page. */
 export default function CTABand() {
@@ -23,7 +24,7 @@ export default function CTABand() {
     >
       <motion.div
         style={{ opacity: glow }}
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_70%,rgba(200,255,46,0.45),transparent_62%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-glow-band"
       />
       <motion.div
         style={{ x: wordX }}
@@ -37,19 +38,20 @@ export default function CTABand() {
 
       <div className="relative mx-auto max-w-[1400px] px-6 md:px-10">
         <h2 className="max-w-4xl font-display text-[clamp(2rem,6vw,5rem)] font-bold leading-[0.96] tracking-[-0.035em]">
-          <SplitText text="Got something worth building?" />
+          <SplitText text="Got a project that needs building or fixing?" />
         </h2>
 
         <p className="mt-7 max-w-lg text-lg leading-relaxed text-fog">
-          Tell me the deadline and the problem. I&rsquo;ll tell you within a day
-          whether I&rsquo;m the right person — and if not, who is.
+          Tell me what you&rsquo;re trying to achieve. I&rsquo;ll come back with an
+          honest read on scope, timeline and whether I&rsquo;m the right person
+          for it.
         </p>
 
         <div className="mt-12 flex flex-wrap items-center gap-4">
           <Link
             href="/contact"
             data-cursor="link"
-            className="group relative overflow-hidden rounded-full bg-volt px-9 py-5 font-display text-lg font-semibold text-ink"
+            className="group relative overflow-hidden rounded-full bg-volt px-9 py-5 font-display text-lg font-semibold text-on-accent transition-colors duration-400 group-hover:text-ink"
           >
             <span className="relative z-10 flex items-center gap-3">
               Start a project
@@ -67,11 +69,13 @@ export default function CTABand() {
           </Link>
 
           <a
-            href="mailto:hello@josesebastian.dev"
+            href={SITE.whatsapp}
+            target="_blank"
+            rel="noreferrer"
             data-cursor="link"
             className="rounded-full border border-line px-9 py-5 font-display text-lg font-medium text-bone transition-colors duration-400 hover:border-bone/50 hover:bg-bone/5"
           >
-            hello@josesebastian.dev
+            Message on WhatsApp
           </a>
         </div>
       </div>

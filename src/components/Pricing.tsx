@@ -1,162 +1,103 @@
 "use client";
 
 import Link from "next/link";
+import { Reveal, SectionLabel, Stagger, staggerItem } from "./motion-primitives";
 import { motion } from "motion/react";
-import { SectionLabel, Stagger, staggerItem } from "./motion-primitives";
+import { SERVICES } from "@/content/services";
 
-const TIERS = [
-  {
-    name: "Landing",
-    price: "€4.5k",
-    from: "from",
-    blurb:
-      "One page, done properly. For a launch, a campaign, or a product that needs somewhere to point.",
-    timeline: "2–3 weeks",
-    includes: [
-      "Design and build",
-      "Up to 6 sections",
-      "CMS for all copy",
-      "Analytics + SEO setup",
-      "30 days of support",
-    ],
-    cta: "Start here",
-    featured: false,
-  },
-  {
-    name: "Site",
-    price: "€12k",
-    from: "from",
-    blurb:
-      "A full marketing site with the motion work this page is built on. The usual choice.",
-    timeline: "5–7 weeks",
-    includes: [
-      "Everything in Landing",
-      "6–12 pages, blog included",
-      "Motion + WebGL layer",
-      "Headless CMS, handover recording",
-      "Performance budget enforced in CI",
-      "60 days of support",
-    ],
-    cta: "Most projects",
-    featured: true,
-  },
-  {
-    name: "Product",
-    price: "€6k",
-    from: "per month",
-    blurb:
-      "Ongoing frontend work on an app or platform. Fixed monthly, cancel with 30 days' notice.",
-    timeline: "Rolling",
-    includes: [
-      "Dedicated days each week",
-      "App, dashboard or design system work",
-      "Code review and mentoring",
-      "Direct Slack channel",
-      "No minimum term after month two",
-    ],
-    cta: "Talk retainer",
-    featured: false,
-  },
-];
-
+/**
+ * A price table, not a second set of tier cards. The four service cards above
+ * already carry the detail — repeating it here as three invented tiers is how
+ * a services page ends up saying the same thing twice with different numbers.
+ */
 export default function Pricing() {
   return (
     <section id="pricing" className="relative py-28 md:py-40">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <SectionLabel index="04">Pricing</SectionLabel>
+        <SectionLabel index="02">Pricing</SectionLabel>
 
         <div className="mb-16 flex flex-wrap items-end justify-between gap-8">
           <h2 className="max-w-2xl font-display text-[clamp(2rem,5vw,4rem)] font-bold leading-[0.98] tracking-[-0.03em]">
-            Fixed price,
-            <span className="text-fog"> agreed before I start.</span>
+            The numbers,
+            <span className="text-fog"> before you ask.</span>
           </h2>
           <p className="max-w-sm text-sm leading-relaxed text-fog">
-            You get a number and a date in writing after the first call. If the
-            scope changes we re-quote in the open — you will never see an
-            invoice you did not expect.
+            A written scope with a fixed price or a clear rate, a timeline, and
+            what is explicitly not included. No surprises on the invoice.
           </p>
         </div>
 
-        <Stagger className="grid gap-5 lg:grid-cols-3" gap={0.1}>
-          {TIERS.map((t) => (
+        <Stagger
+          className="overflow-hidden rounded-2xl border border-line"
+          gap={0.08}
+        >
+          {SERVICES.map((s, i) => (
             <motion.div
-              key={t.name}
+              key={s.slug}
               variants={staggerItem}
-              className={`group relative flex flex-col overflow-hidden rounded-2xl border p-8 transition-colors duration-500 md:p-10 ${
-                t.featured
-                  ? "border-volt/45 bg-volt/[0.04]"
-                  : "border-line bg-ink-2/50 hover:border-fog/30"
+              className={`group flex flex-col gap-5 p-7 transition-colors duration-500 hover:bg-ink-2/50 md:flex-row md:items-center md:gap-10 md:p-9 ${
+                i > 0 ? "border-t border-line" : ""
               }`}
             >
-              {t.featured && (
-                <span className="absolute right-6 top-6 rounded-full bg-volt px-3 py-1 font-display text-[10px] font-semibold uppercase tracking-[0.16em] text-ink">
-                  Most picked
-                </span>
-              )}
+              <span className="font-display text-xs tracking-[0.3em] text-accent md:w-12">
+                {s.n}
+              </span>
 
-              <h3 className="font-display text-xl font-semibold tracking-tight">
-                {t.name}
-              </h3>
-
-              <div className="mt-6 flex items-baseline gap-2">
-                <span className="font-display text-[11px] uppercase tracking-[0.2em] text-fog">
-                  {t.from}
-                </span>
-                <span className="font-display text-5xl font-bold tracking-tight">
-                  {t.price}
-                </span>
+              <div className="flex-1">
+                <h3 className="font-display text-xl font-semibold tracking-tight md:text-2xl">
+                  {s.title}
+                </h3>
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-fog">
+                  {s.blurb}
+                </p>
               </div>
 
-              <p className="mt-5 leading-relaxed text-fog">{t.blurb}</p>
-
-              <div className="mt-6 inline-flex w-fit items-center gap-2 rounded-full border border-line px-3.5 py-1.5 font-display text-xs text-fog">
-                <span className="h-1.5 w-1.5 rounded-full bg-volt" />
-                {t.timeline}
+              <div className="shrink-0 md:w-52 md:text-right">
+                <div className="font-display text-[11px] uppercase tracking-[0.2em] text-fog">
+                  {s.priceNote}
+                </div>
+                <div className="mt-1 font-display text-2xl font-bold tracking-tight md:text-3xl">
+                  {s.price}
+                </div>
               </div>
-
-              <ul className="mt-8 space-y-3 border-t border-line pt-8">
-                {t.includes.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-bone">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      className="mt-1 shrink-0 text-volt"
-                      aria-hidden
-                    >
-                      <path
-                        d="M2 7.5l3.2 3.2L12 4"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href="/contact"
-                data-cursor="link"
-                className={`group/btn relative mt-10 overflow-hidden rounded-full px-6 py-3.5 text-center font-display font-semibold transition-colors duration-400 ${
-                  t.featured
-                    ? "bg-volt text-ink"
-                    : "border border-line text-bone hover:border-bone/50"
-                }`}
-              >
-                <span className="relative z-10">{t.cta}</span>
-              </Link>
             </motion.div>
           ))}
         </Stagger>
 
-        <p className="mt-10 max-w-2xl text-sm leading-relaxed text-fog">
-          Prices exclude VAT. Non-profits and open-source projects get 30% off,
-          no questions asked — just mention it on the first call.
-        </p>
+        <Reveal delay={0.1}>
+          <div className="mt-10 flex flex-wrap items-center gap-6">
+            <Link
+              href="/contact"
+              data-cursor="link"
+              className="group relative overflow-hidden rounded-full bg-volt px-8 py-4 font-display font-semibold text-on-accent transition-colors duration-400 group-hover:text-ink"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                Get a fixed quote
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  className="transition-transform duration-400 group-hover:translate-x-1"
+                >
+                  <path
+                    d="M1 7h11M7 2l5 5-5 5"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <span className="absolute inset-0 origin-bottom scale-y-0 bg-bone transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-y-100" />
+            </Link>
+
+            <p className="max-w-md text-sm leading-relaxed text-fog">
+              Every project is scoped before it is priced — these are starting
+              points, not a menu.
+            </p>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

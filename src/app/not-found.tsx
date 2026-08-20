@@ -24,7 +24,7 @@ export default function NotFound() {
         <div className="mt-12 flex flex-wrap gap-4">
           <Link
             href="/"
-            className="group relative overflow-hidden rounded-full bg-bone px-8 py-4 font-display font-semibold text-ink"
+            className="group relative overflow-hidden rounded-full bg-bone px-8 py-4 font-display font-semibold text-ink transition-colors duration-500 group-hover:text-on-accent"
           >
             <span className="relative z-10">Back home</span>
             <span className="absolute inset-0 origin-left scale-x-0 bg-volt transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />

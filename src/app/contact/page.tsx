@@ -2,18 +2,20 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import ContactForm from "@/components/ContactForm";
 import { Reveal } from "@/components/motion-primitives";
+import { SITE, MAILTO, TEL } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Contact — Jose Sebastian",
   description:
-    "Tell me the deadline and the problem. I reply within one working day, and I will tell you if I am not the right fit.",
+    "Tell me what you are trying to achieve. I usually reply within a few hours, Dubai time, and I will tell you if I am not the right fit.",
 };
 
 const DETAILS = [
-  { label: "Email", value: "hello@josesebastian.dev", href: "mailto:hello@josesebastian.dev" },
-  { label: "Booking", value: "cal.com/josesebastian", href: "#" },
-  { label: "Based", value: "Lisbon — GMT ±3" },
-  { label: "Reply time", value: "Within 1 working day" },
+  { label: "Email", value: SITE.email, href: MAILTO },
+  { label: "Phone", value: SITE.phone, href: TEL },
+  { label: "WhatsApp", value: "Message me", href: SITE.whatsapp, external: true },
+  { label: "Based", value: SITE.location },
+  { label: "Reply time", value: SITE.replyTime },
 ];
 
 export default function ContactPage() {
@@ -21,7 +23,7 @@ export default function ContactPage() {
     <main>
       <PageHero
         eyebrow="Next step"
-        title="Tell me what you are building."
+        title="Got a project that needs building or fixing?"
         lede="The more concrete the better: what the problem is, when it needs to be live, and anything you already know about how it should work."
       />
 
@@ -48,6 +50,9 @@ export default function ContactPage() {
                           <a
                             href={d.href}
                             data-cursor="link"
+                            {...(d.external
+                              ? { target: "_blank", rel: "noreferrer" }
+                              : {})}
                             className="border-b border-line pb-0.5 transition-colors hover:border-volt"
                           >
                             {d.value}
@@ -69,13 +74,13 @@ export default function ContactPage() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-volt opacity-70" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-volt" />
                   </span>
-                  <span className="font-display text-[11px] uppercase tracking-[0.2em] text-volt">
+                  <span className="font-display text-[11px] uppercase tracking-[0.2em] text-accent">
                     Available
                   </span>
                 </div>
                 <p className="leading-relaxed text-fog">
-                  Two project slots open for Q4. Retainer work can usually start
-                  within two weeks.
+                  Currently taking on new projects and retainers. Quickest reply
+                  is WhatsApp — usually within a few hours, Dubai time.
                 </p>
               </div>
             </Reveal>

@@ -7,7 +7,8 @@ export type Block =
   | { type: "h2"; text: string }
   | { type: "ul"; items: string[] }
   | { type: "code"; lang: string; code: string }
-  | { type: "quote"; text: string };
+  | { type: "quote"; text: string }
+  | { type: "table"; head: string[]; rows: string[][] };
 
 export type Post = {
   slug: string;
@@ -15,352 +16,363 @@ export type Post = {
   excerpt: string;
   date: string; // ISO
   readingMinutes: number;
+  /** primary tag, used on the list row */
   tag: string;
+  /** full topic list, shown on the article */
+  tags?: string[];
   body: Block[];
 };
 
 export const POSTS: Post[] = [
   {
-    slug: "unlayered-css-beats-tailwind-utilities",
-    title: "The one CSS rule that silently overrode every Tailwind utility",
+    slug: "technical-seo-audit-checklist",
+    title: "The 12-point technical SEO audit I run before touching a site",
     excerpt:
-      "A single universal border-color rule in globals.css quietly flattened every accent border on a site. The cause is cascade layers, and the fix is one line.",
-    date: "2026-07-28",
-    readingMinutes: 5,
-    tag: "CSS",
+      "Before any keyword research, I check twelve things. Most sites fail at least four of them, and fixing those usually moves rankings more than new content does.",
+    date: "2026-08-10",
+    readingMinutes: 10,
+    tag: "SEO",
+    tags: ["SEO", "Technical SEO", "Audit"],
     body: [
       {
         type: "p",
-        text: "I shipped a build where every border was the same grey. Not wrong-grey — the right grey, everywhere, including the places that were supposed to be lime, transparent, or a translucent white. The utilities were in the markup. DevTools showed them being applied and then beaten by something.",
+        text: "When someone asks me to “do their SEO”, the first thing I do is not keyword research. It is a technical pass, because there is no point writing content for a site Google struggles to crawl, render or trust.",
       },
       {
         type: "p",
-        text: "The culprit was four lines at the top of globals.css, written months earlier and never questioned:",
+        text: "This is the list I work through, roughly in order. It takes about two hours with Screaming Frog, Search Console and PageSpeed Insights open.",
       },
-      {
-        type: "code",
-        lang: "css",
-        code: `@import "tailwindcss";
 
-* {
-  border-color: var(--color-line);
-}`,
-      },
-      { type: "h2", text: "Why specificity does not save you" },
+      { type: "h2", text: "1. Is it actually indexable?" },
       {
         type: "p",
-        text: "The instinct is to reach for specificity. A class selector (0,1,0) beats a universal selector (0,0,0), so `.border-transparent` should win. It does not, and the reason is that specificity is only consulted after the cascade has compared layers.",
+        text: "Sounds obvious. It is not. I check for a stray noindex in the page head, a Disallow: / left in robots.txt from the staging site, and whether the canonical tag on each page points at itself rather than the homepage.",
       },
       {
         type: "p",
-        text: "Tailwind v4 puts its output into named layers. Every utility lives inside `@layer utilities`. Unlayered CSS — anything you write at the top level of a stylesheet — is treated as a layer that comes last, which means it wins against every layered rule regardless of how specific that rule is.",
+        text: "I have found a noindex sitewide on a live site more than once. It is usually a staging setting that shipped. It costs everything and takes ninety seconds to fix.",
+      },
+
+      { type: "h2", text: "2. One canonical version of every URL" },
+      {
+        type: "p",
+        text: "https://example.com, http://example.com, https://www.example.com and https://example.com/index.php should all resolve to exactly one address with a 301. Trailing slash handling should be consistent.",
+      },
+      { type: "p", text: "Every duplicate splits your signals." },
+
+      { type: "h2", text: "3. XML sitemap that matches reality" },
+      {
+        type: "p",
+        text: "The sitemap should contain the URLs you want indexed and nothing else — no redirects, no 404s, no noindex pages, no tag archives you do not care about. Then confirm it is referenced in robots.txt and submitted in Search Console.",
+      },
+
+      { type: "h2", text: "4. Core Web Vitals on mobile, on real data" },
+      {
+        type: "p",
+        text: "Lab scores are a diagnostic tool. The number that counts is the field data in Search Console’s Core Web Vitals report, because that is real visitors on real phones on real networks.",
+      },
+      {
+        type: "p",
+        text: "I look at Largest Contentful Paint first. It is usually a hero image that has not been compressed, or a font loading strategy that blocks rendering.",
+      },
+
+      { type: "h2", text: "5. Render check, not just source check" },
+      {
+        type: "p",
+        text: "Fetch the page with JavaScript disabled. If your content only appears after JS runs, Google will probably still index it — eventually, and less reliably. For a content site there is rarely a good reason to accept that risk.",
+      },
+
+      { type: "h2", text: "6. Internal linking depth" },
+      {
+        type: "p",
+        text: "Every important page should be reachable within three clicks of the homepage. Screaming Frog gives you crawl depth in one column. Anything sitting at depth five or more is effectively invisible, no matter how good it is.",
+      },
+      {
+        type: "p",
+        text: "Orphan pages — in the sitemap but linked from nowhere — are the same problem in a worse form.",
+      },
+
+      { type: "h2", text: "7. Heading structure that means something" },
+      {
+        type: "p",
+        text: "One <h1> per page, describing that page. Then <h2> and <h3> in a logical order without skipping levels. This is as much an accessibility fix as an SEO one, and it is a reliable indicator of general build quality: sites that get this wrong usually get other things wrong too.",
+      },
+
+      { type: "h2", text: "8. Title tags and meta descriptions, written for humans" },
+      {
+        type: "p",
+        text: "Every page needs a unique title under about 60 characters that leads with the thing people search for. Descriptions do not directly affect ranking, but they affect click-through rate, which is the metric that actually matters.",
+      },
+      {
+        type: "p",
+        text: "Duplicates across pages are a symptom of a template writing them automatically. Fix the template.",
+      },
+
+      { type: "h2", text: "9. Structured data that validates" },
+      {
+        type: "p",
+        text: "At minimum: Organization or Person, BreadcrumbList, and Article on blog posts. LocalBusiness if you have a physical location — important in the UAE market. Run it through Google’s Rich Results Test and fix every error before worrying about warnings.",
+      },
+
+      { type: "h2", text: "10. Image weight and alt text" },
+      {
+        type: "p",
+        text: "Images are almost always the largest thing on the page. Modern format, sized for the container rather than the original camera resolution, lazy-loaded below the fold, and given width and height attributes so nothing shifts as they load.",
+      },
+      {
+        type: "p",
+        text: "Alt text describes the image. It is not a place to put keywords.",
+      },
+
+      { type: "h2", text: "11. HTTPS everywhere, with no mixed content" },
+      {
+        type: "p",
+        text: "Valid certificate, HTTP redirecting to HTTPS, and no assets loading over plain HTTP inside an HTTPS page. Add HSTS once you are confident. Check the certificate expiry and whether renewal is automated — an expired certificate takes a site down completely, and it happens on a schedule you can predict.",
+      },
+
+      { type: "h2", text: "12. Local signals, if you serve a city" },
+      {
+        type: "p",
+        text: "For UAE businesses this is often the highest-leverage item on the whole list. Google Business Profile complete and verified, name/address/phone consistent everywhere they appear, and location pages that say something specific rather than being one template with the city name swapped.",
+      },
+
+      { type: "h2", text: "What I do with the results" },
+      {
+        type: "p",
+        text: "Everything goes in a sheet with three columns: effort, impact, and owner. High impact and low effort gets done this week. Low impact and high effort probably never gets done, and saying so out loud is more useful than leaving it on a list to feel comprehensive.",
       },
       {
         type: "quote",
-        text: "Unlayered styles beat layered styles. Specificity is compared only within the same layer.",
-      },
-      {
-        type: "p",
-        text: "So a universal selector written outside any layer outranks a class written inside one. That is the entire bug.",
-      },
-      { type: "h2", text: "The fix" },
-      {
-        type: "p",
-        text: "Put the rule in the layer it belongs to. Tailwind declares its layer order up front, so `base` is available and sits below `utilities`:",
-      },
-      {
-        type: "code",
-        lang: "css",
-        code: `@layer base {
-  * {
-    border-color: var(--color-line);
-  }
-}`,
-      },
-      {
-        type: "p",
-        text: "Now every border-color utility overrides the default, and elements without one still get the sensible fallback.",
-      },
-      { type: "h2", text: "How to catch it" },
-      {
-        type: "p",
-        text: "This class of bug is invisible in a build log and easy to miss by eye, because the wrong value is usually a plausible one. What caught it for me was reading computed styles out of a real browser rather than trusting the screenshot:",
-      },
-      {
-        type: "code",
-        lang: "js",
-        code: `const cs = getComputedStyle(document.querySelector("header > div"));
-console.log(cs.borderTopColor); // expected transparent, got rgb(30, 34, 48)`,
-      },
-      {
-        type: "p",
-        text: "If you write any global resets alongside Tailwind v4, audit them now. Anything setting a property that a utility also sets — border-color, font-family, letter-spacing — is a candidate.",
+        text: "A 90-page audit PDF that nobody reads is not a deliverable. A prioritised list of twelve things with names against them is.",
       },
     ],
   },
+
   {
-    slug: "scroll-linked-animation-without-rerenders",
-    title: "Scroll-linked WebGL without a single React re-render",
+    slug: "wordpress-or-nextjs-dubai-sme",
+    title: "WordPress or Next.js? An honest answer for a Dubai SME",
     excerpt:
-      "Bridging scroll position into a useFrame loop through React state will cost you frames. A plain module and a rAF loop will not.",
-    date: "2026-06-14",
+      "Most comparisons are written by people selling one of the two. Here is how I actually decide, based on who edits the site and what it has to do.",
+    date: "2026-08-05",
     readingMinutes: 7,
-    tag: "WebGL",
+    tag: "WordPress",
+    tags: ["WordPress", "Next.js", "Web Development"],
     body: [
       {
         type: "p",
-        text: "The naive way to drive a Three.js scene from scroll is to put scroll position in state. It works, it is easy to read, and it will re-render your component tree on every scroll event. On a page with a few hundred DOM nodes and three canvases, that is where your frames go.",
+        text: "Every few weeks someone asks me whether they should build on WordPress or move to something modern like Next.js. The honest answer is that the question is usually framed wrong. The platform is downstream of two things: who edits the site, and what the site has to do beyond displaying pages.",
       },
-      { type: "h2", text: "The shape of the fix" },
-      {
-        type: "p",
-        text: "React does not need to know about scroll. The render loop does. So put the value somewhere both can reach that is not React state:",
-      },
-      {
-        type: "code",
-        lang: "ts",
-        code: `export const scrollStore = {
-  progress: 0,
-  y: 0,
-  velocity: 0,
-};
+      { type: "p", text: "Here is the decision as I actually make it." },
 
-export function startScrollTracking() {
-  let last = window.scrollY;
-  const tick = () => {
-    const y = window.scrollY;
-    const max = Math.max(1, document.body.scrollHeight - window.innerHeight);
-    scrollStore.y = y;
-    scrollStore.progress = Math.min(1, y / max);
-    scrollStore.velocity += (y - last - scrollStore.velocity) * 0.15;
-    last = y;
-    requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
-}`,
+      { type: "h2", text: "Start with who edits it" },
+      { type: "p", text: "This matters more than any technical consideration." },
+      {
+        type: "p",
+        text: "If your marketing coordinator needs to publish a promotion on Thursday afternoon without opening a support ticket, you need a real CMS with a real editor. WordPress does this better than almost anything, and it has done for fifteen years. Fighting that is stubbornness, not engineering.",
       },
       {
         type: "p",
-        text: "Then read it inside useFrame, which already runs once per frame:",
+        text: "If content changes rarely, or changes only through you, that constraint disappears and faster options open up.",
       },
-      {
-        type: "code",
-        lang: "tsx",
-        code: `useFrame((state, delta) => {
-  const d = Math.min(delta, 0.05);       // clamp: tab-switches deliver huge deltas
-  material.current.uniforms.uScroll.value = scrollStore.progress;
-  mesh.current.position.y = scrollStore.progress * 4;
-});`,
-      },
-      { type: "h2", text: "Three details that matter" },
+
+      { type: "h2", text: "Then ask what it has to do" },
+      { type: "p", text: "Sort your site into one of three buckets:" },
       {
         type: "ul",
         items: [
-          "Clamp delta. When a tab is backgrounded and restored, delta can be several seconds, and anything multiplied by it jumps.",
-          "Sample in rAF, not in a scroll listener. Scroll events fire at input frequency, which is not display frequency; reading scrollY once per frame gives you exactly the resolution you can draw.",
-          "Ease toward the target rather than assigning it. A single lerp line turns a value that snaps into one that feels weighted.",
+          "Bucket one — it shows information. Company site, service pages, a blog, contact form. Perhaps a few hundred pages.",
+          "Bucket two — it sells things. Product catalogue, cart, checkout, payment gateway, stock levels, order emails.",
+          "Bucket three — it does work. Accounts, dashboards, quotes, bookings, anything where a user logs in and the site behaves differently for them.",
         ],
       },
-      { type: "h2", text: "Passing per-section progress" },
-      {
-        type: "p",
-        text: "For values that come from the DOM — a section's own scroll progress — a ref works as the bridge. Write to it from a motion value subscription, read it in the frame loop, and React still never renders:",
-      },
-      {
-        type: "code",
-        lang: "tsx",
-        code: `const progressRef = useRef(0);
-useMotionValueEvent(scrollYProgress, "change", (v) => {
-  progressRef.current = v;
-});
 
-return <Scene progress={progressRef} />;`,
-      },
+      { type: "h2", text: "The actual recommendation" },
       {
-        type: "p",
-        text: "The scene eases toward progressRef.current every frame. Scrubbing feels tied to the page, and the component that owns the scroll never renders twice.",
-      },
-    ],
-  },
-  {
-    slug: "sticky-broken-by-overflow-hidden",
-    title: "Why your position: sticky stopped working",
-    excerpt:
-      "Nine times out of ten it is an ancestor with overflow: hidden. There is a one-word fix that almost nobody reaches for.",
-    date: "2026-05-02",
-    readingMinutes: 4,
-    tag: "CSS",
-    body: [
-      {
-        type: "p",
-        text: "You add `position: sticky`, set a `top`, and nothing sticks. The element scrolls away like it always did. Before you start adding heights and z-indexes at random, walk up the tree and look for overflow.",
-      },
-      { type: "h2", text: "The mechanism" },
-      {
-        type: "p",
-        text: "A sticky element sticks within its nearest scrolling ancestor. Setting `overflow` to anything other than `visible` on an ancestor makes that ancestor a scroll container. Your element then dutifully sticks inside a box that never scrolls, which looks identical to not sticking at all.",
-      },
-      {
-        type: "p",
-        text: "The usual offender is the one-liner everyone adds to stop a horizontal scrollbar:",
-      },
-      {
-        type: "code",
-        lang: "css",
-        code: `body {
-  overflow-x: hidden; /* also sets overflow-y to auto */
-}`,
-      },
-      {
-        type: "p",
-        text: "You cannot set one axis to hidden and leave the other visible. The spec computes the other axis to auto, so this single declaration turns body into a scroll container and quietly breaks every sticky descendant on the page.",
-      },
-      { type: "h2", text: "Use clip instead" },
-      {
-        type: "code",
-        lang: "css",
-        code: `body {
-  overflow-x: clip;
-}`,
-      },
-      {
-        type: "p",
-        text: "`clip` cuts the overflow without creating a scroll container, so sticky keeps working. It is supported everywhere that matters and it is almost always what you meant.",
-      },
-      { type: "h2", text: "The other suspects" },
-      {
-        type: "ul",
-        items: [
-          "An ancestor with a fixed height smaller than the sticky element, leaving nothing to travel through.",
-          "A flex parent whose default align-items: stretch makes the child full-height, so there is no room to move.",
-          "A missing top, right, bottom or left value — sticky does nothing without an inset.",
-          "A transform, filter or will-change on an ancestor, which creates a containing block and changes what fixed and sticky resolve against.",
+        type: "table",
+        head: ["Bucket", "Editors are non-technical", "Editors are technical"],
+        rows: [
+          ["Shows information", "WordPress, hardened", "Astro"],
+          ["Sells things", "WooCommerce or Shopify", "Next.js + a commerce backend"],
+          ["Does work", "Next.js with a headless CMS", "Next.js"],
         ],
       },
       {
         type: "p",
-        text: "Fastest way to find it: in DevTools, walk up from the element and watch computed overflow on each ancestor. The first one that is not visible is your answer.",
+        text: "That is genuinely most of it. The interesting cases are the edges.",
       },
-    ],
-  },
-  {
-    slug: "framer-motion-variant-transition-precedence",
-    title: "Your stagger delay is being silently ignored",
-    excerpt:
-      "A variant's own transition beats the transition prop. If you pass delay as a prop next to variants, it does nothing.",
-    date: "2026-04-09",
-    readingMinutes: 4,
-    tag: "Motion",
-    body: [
-      {
-        type: "p",
-        text: "This looks correct, reads correctly in review, and does not work:",
-      },
-      {
-        type: "code",
-        lang: "tsx",
-        code: `const REVEAL = {
-  hidden: { y: 34, opacity: 0 },
-  show: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
-  },
-};
 
-<motion.div
-  variants={REVEAL}
-  initial="hidden"
-  whileInView="show"
-  transition={{ delay }}   // ignored
-/>`,
+      { type: "h2", text: "When I move a brochure site off WordPress" },
+      {
+        type: "p",
+        text: "When speed is a business requirement rather than a preference. If you are competing on local search in a crowded category, and your competitors all load in four seconds, being the one that loads in under one is a real advantage — and it is much easier to hold that with Astro than to fight a WordPress theme into shape every time a plugin updates.",
       },
       {
         type: "p",
-        text: "Every element animates at once. The delay is gone, and nothing warns you.",
+        text: "Astro also removes a maintenance surface entirely. There is no PHP, no database, no plugin ecosystem waiting to be exploited. For a site that changes twice a month, that trade is very often worth it. You still get a proper editor if you pair it with a Git-based CMS — this site runs exactly that way.",
       },
-      { type: "h2", text: "Precedence" },
-      {
-        type: "p",
-        text: "The `transition` prop sets a default. A transition defined inside the variant is more specific and replaces it wholesale — it is not merged key by key. Since `show` carries its own transition object, that object is what runs, and it has no delay in it.",
-      },
-      { type: "h2", text: "Use a function variant" },
-      {
-        type: "p",
-        text: "Make the variant a function and feed it through `custom`. The delay then lives in the same object as the duration, so nothing overrides anything:",
-      },
-      {
-        type: "code",
-        lang: "tsx",
-        code: `const REVEAL = {
-  hidden: { y: 34, opacity: 0 },
-  show: (delay = 0) => ({
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1], delay },
-  }),
-};
 
-<motion.div variants={REVEAL} custom={delay} initial="hidden" whileInView="show" />`,
+      { type: "h2", text: "When I keep WordPress despite the temptation" },
+      {
+        type: "p",
+        text: "When there are more than about five people who touch the content, or when the business already runs on WordPress plugins that would each need replacing. Rebuilding a working WooCommerce store as a headless commerce project is a six-figure decision dressed up as a technical upgrade.",
       },
       {
         type: "p",
-        text: "If every child shares one parent, prefer staggerChildren on the parent and skip per-child delays entirely — it stays correct when the list length changes:",
+        text: "Hardened WordPress on decent hosting behind Cloudflare, with a caching layer and a disciplined plugin diet, is genuinely fast. Most slow WordPress sites are not slow because of WordPress. They are slow because of a page builder, thirty-one plugins and six unoptimised hero images.",
       },
-      {
-        type: "code",
-        lang: "tsx",
-        code: `variants={{
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
-}}`,
-      },
-    ],
-  },
-  {
-    slug: "what-i-check-before-calling-it-done",
-    title: "What I check before I tell a client it is done",
-    excerpt:
-      "A build that compiles is not a build that works. The short list I run on every project, and why screenshots are the least of it.",
-    date: "2026-03-17",
-    readingMinutes: 6,
-    tag: "Process",
-    body: [
+
+      { type: "h2", text: "When Next.js earns its keep" },
       {
         type: "p",
-        text: "A green build tells you the types line up and the bundler found every import. It tells you nothing about whether the page renders, whether the animation runs, or whether the thing you built is legible on a phone. Those are separate questions and each one needs its own check.",
+        text: "When the site is an application. Customer portals, booking systems, anything with authentication and per-user state. At that point you are writing software, and you want a framework designed for it rather than a CMS bent into that shape.",
       },
-      { type: "h2", text: "Drive a real browser" },
+
+      { type: "h2", text: "The question nobody asks" },
+      { type: "p", text: "Who maintains it in eighteen months?" },
       {
         type: "p",
-        text: "I open the built site in actual Chrome, not a mental model of it. The script scrolls the full page, waits for motion to settle at each stop, screenshots, and collects every console error, page error and failed request along the way.",
+        text: "A Next.js site built by a contractor who then becomes unreachable is worse than a WordPress site any local developer can pick up. Choose the platform your future self, or your future agency, can actually operate.",
       },
       {
-        type: "p",
-        text: "On a recent build that pass found three things the compiler could not: a global CSS rule overriding every accent border, a stagger delay being silently dropped, and a favicon 404. None of them would have failed CI.",
+        type: "quote",
+        text: "This is the single most common expensive mistake I see in Dubai. A company pays for a beautiful custom build, the developer moves on, and two years later nobody can change the phone number in the footer without a quote.",
       },
-      { type: "h2", text: "Read computed styles, not screenshots" },
-      {
-        type: "p",
-        text: "Screenshots tell you something looks wrong. Computed styles tell you why. When a border looked grey I did not squint at the PNG, I asked the element what colour it thought it was.",
-      },
-      { type: "h2", text: "The list" },
+
+      { type: "h2", text: "The short version" },
       {
         type: "ul",
         items: [
-          "Zero console errors, page errors and failed requests across the whole page, not just the first screen.",
-          "No horizontal overflow: scrollWidth equals clientWidth at every breakpoint.",
-          "Real mobile viewport, not a narrowed desktop one — isMobile and hasTouch change layout and event behaviour.",
-          "Keyboard-only pass through every interactive element, with a visible focus ring on each.",
-          "prefers-reduced-motion honoured, including scroll-linked transforms and not just CSS animation.",
-          "Lighthouse on the production build over a throttled connection, because the dev server lies about performance.",
-          "Every link resolves — placeholder href=\"#\" is the most common thing shipped by accident.",
+          "Non-technical editors, ordinary content site → WordPress, properly hardened",
+          "Technical editors, speed matters → Astro",
+          "Selling products → WooCommerce, unless you have outgrown it",
+          "Users log in and do things → Next.js",
+          "Nobody to maintain it → the boring option, every time",
         ],
       },
-      { type: "h2", text: "Say what you did not check" },
       {
         type: "p",
-        text: "The last step is telling the client what is verified and what is not. If I tested three viewports, I say three. If the contact form is wired but has no email provider configured, I say that in the handover, not in a comment nobody reads. A caveat stated up front is a detail; the same caveat discovered later is a defect.",
+        text: "If you are weighing this up for a specific site, send me the URL and I will tell you which bucket it is in. It usually takes about ten minutes to work out.",
+      },
+    ],
+  },
+
+  {
+    slug: "security-baseline-small-dubai-office",
+    title: "A security baseline for a small Dubai office that takes one afternoon",
+    excerpt:
+      "Not a compliance framework. Nine practical controls covering firewall, backups, Microsoft 365 and website hardening that a 10 to 50 person office can put in place this week.",
+    date: "2026-07-28",
+    readingMinutes: 7,
+    tag: "Security",
+    tags: ["Security", "IT Infrastructure", "Cloudflare"],
+    body: [
+      {
+        type: "p",
+        text: "Most small offices I walk into have no security baseline. Not a bad one — none. There is a router the ISP supplied, a shared admin password, and a backup someone set up in 2021 that nobody has restored from since.",
+      },
+      {
+        type: "p",
+        text: "This is not a compliance framework. It is the set of controls that would have prevented every incident I have personally cleaned up, and a competent person can put most of it in place in an afternoon.",
+      },
+
+      { type: "h2", text: "1. Get the firewall off default settings" },
+      {
+        type: "p",
+        text: "If you have a FortiGate or similar, change the admin password, disable WAN-side management, and turn on the logging you are already paying for. If you are running the ISP’s router as your only perimeter, that is your first purchase.",
+      },
+      {
+        type: "p",
+        text: "Segment the guest Wi-Fi from the office network. It is a five-minute change and it means a compromised visitor laptop cannot see your file server.",
+      },
+
+      { type: "h2", text: "2. Enforce MFA on Microsoft 365" },
+      {
+        type: "p",
+        text: "Not “enable”. Enforce, through a Conditional Access policy, with no per-user exceptions for the managing director. Business Email Compromise is the most common attack against a small UAE business, and MFA stops nearly all of it.",
+      },
+      {
+        type: "p",
+        text: "While you are in there: block legacy authentication protocols. They exist to bypass exactly the control you just turned on.",
+      },
+
+      { type: "h2", text: "3. Backups you have actually restored" },
+      {
+        type: "p",
+        text: "A backup is a hypothesis until you restore from it. Pick a file, restore it, note the date you did so. Then do it again in six months.",
+      },
+      {
+        type: "p",
+        text: "Follow 3-2-1: three copies, two different media, one off-site. For Microsoft 365 specifically, note that Microsoft does not back up your data in the sense you mean — retention policies are not backups, and a deleted mailbox is gone once the retention window closes.",
+      },
+
+      { type: "h2", text: "4. Put Cloudflare in front of the website" },
+      {
+        type: "p",
+        text: "Free tier is enough for most offices. You get DDoS protection, a WAF, and TLS without managing certificates yourself.",
+      },
+      {
+        type: "p",
+        text: "Turn on: Always Use HTTPS, Automatic HTTPS Rewrites, and a rate-limiting rule on the login path. If you run WordPress, rate-limit /wp-login.php and /xmlrpc.php specifically. That single rule eliminates the overwhelming majority of automated attacks against a WordPress site.",
+      },
+
+      { type: "h2", text: "5. Patch on a schedule, not on an incident" },
+      {
+        type: "p",
+        text: "Operating systems and browsers on automatic updates. WordPress core, themes and plugins updated on a staging copy first, then production, on a fixed day each month.",
+      },
+      {
+        type: "p",
+        text: "Uninstall — do not just deactivate — every plugin you are not using. Deactivated plugins still contain exploitable code sitting in your filesystem.",
+      },
+
+      { type: "h2", text: "6. Stop sharing accounts" },
+      {
+        type: "p",
+        text: "The shared admin@company.ae login used by four people is the reason you cannot tell who did what. Individual accounts, roles that reflect what each person actually needs, and a password manager so nobody has to remember them.",
+      },
+      {
+        type: "p",
+        text: "Offboarding then becomes one action instead of an archaeology project.",
+      },
+
+      { type: "h2", text: "7. Know what you own" },
+      {
+        type: "p",
+        text: "A simple sheet: every domain, hosting account, SaaS subscription, and who holds the credentials. Add the renewal dates.",
+      },
+      {
+        type: "p",
+        text: "I have watched a business lose a domain because the renewal notice went to a personal email address belonging to someone who left two years earlier. Recovery took weeks and cost more than a decade of renewals.",
+      },
+
+      { type: "h2", text: "8. Turn on monitoring you will actually notice" },
+      {
+        type: "p",
+        text: "Uptime monitoring on the website with alerts to a channel someone reads. Certificate expiry alerts. Failed-backup alerts.",
+      },
+      {
+        type: "p",
+        text: "An alert nobody sees is not monitoring. Route them somewhere with a human attached.",
+      },
+
+      { type: "h2", text: "9. Write the incident plan on one page" },
+      {
+        type: "p",
+        text: "Who to call, in what order, and where the credentials are kept. Whether you have cyber insurance and what the notification requirement is. How to reach the hosting provider outside business hours.",
+      },
+      {
+        type: "p",
+        text: "One page. Printed, because the scenario where you need it may be the scenario where you cannot log in to read it.",
+      },
+
+      { type: "h2", text: "What this does not cover" },
+      {
+        type: "p",
+        text: "This is a baseline, not a security programme. It does not cover endpoint detection, formal risk assessment, penetration testing, or anything a regulated entity needs. If you handle payment card data or operate under a specific UAE regulatory regime, you need considerably more than this and you need it documented.",
+      },
+      {
+        type: "p",
+        text: "But if you have none of the above, doing these nine things this week puts you ahead of most offices your size — and it removes the failure modes that actually cause weekend emergencies.",
       },
     ],
   },

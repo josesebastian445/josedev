@@ -18,7 +18,7 @@ export default function PostRow({ post }: { post: Post }) {
 
         <div className="flex flex-col gap-6 md:flex-row md:items-baseline md:gap-12">
           <div className="flex shrink-0 items-center gap-4 md:w-56">
-            <span className="rounded-full border border-line px-3 py-1 font-display text-[11px] uppercase tracking-[0.16em] text-volt">
+            <span className="rounded-full border border-line px-3 py-1 font-display text-[11px] uppercase tracking-[0.16em] text-accent">
               {post.tag}
             </span>
             <span className="font-display text-xs text-fog">
@@ -27,7 +27,7 @@ export default function PostRow({ post }: { post: Post }) {
           </div>
 
           <div className="flex-1">
-            <h2 className="font-display text-2xl font-semibold leading-tight tracking-tight transition-colors duration-400 group-hover:text-volt md:text-3xl">
+            <h2 className="font-display text-2xl font-semibold leading-tight tracking-tight transition-colors duration-400 group-hover:text-accent md:text-3xl">
               {post.title}
             </h2>
             <p className="mt-3 max-w-2xl leading-relaxed text-fog">
@@ -39,7 +39,7 @@ export default function PostRow({ post }: { post: Post }) {
             <span className="font-display text-xs text-fog">
               {post.readingMinutes} min
             </span>
-            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-fog transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-ink">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-fog transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-on-accent">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M1 7h11M7 2l5 5-5 5"

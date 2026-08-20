@@ -7,35 +7,39 @@ import { Reveal, SectionLabel } from "./motion-primitives";
 const FAQS = [
   {
     q: "How do we start?",
-    a: "A 45-minute call, free. You tell me the problem and the deadline; I ask enough questions to price it. Within two working days you get a written plan with scope, cost and a delivery date. No discovery phase that bills for a month before anything is built.",
+    a: "A call or a WhatsApp thread. You describe the problem, and I ask the awkward questions about budget and deadlines early rather than late. If it looks like a fit, you get a written scope with a fixed price or a clear rate, a timeline, and what is explicitly not included.",
   },
   {
-    q: "What do you need from me?",
-    a: "Copy and brand assets, one decision-maker who can approve things, and about an hour a week. The most common cause of a late project is not development — it is waiting on content. If your copy is not ready, I will tell you that up front and we will plan around it.",
+    q: "WordPress, Next.js or Astro — which one will I get?",
+    a: "Whichever actually fits. The two questions that decide it are who edits the site every week and what it has to do beyond serving pages. WordPress when your team edits constantly and needs a familiar admin; Next.js or Astro when speed, structure and control matter more than a plugin ecosystem. I will tell you which and why, in writing.",
   },
   {
-    q: "Do you do design as well as development?",
-    a: "Yes, and I design in the browser rather than in Figma. You see the real thing moving by the end of week one, on a URL you can open on your phone. If you already have a designer I work to their files happily — that is often the fastest route.",
+    q: "What does a website actually cost?",
+    a: "Website builds start at AED 4,500. SEO is from AED 2,500 a month, IT support from AED 2,000 a month, and security and maintenance from AED 750 a month. Those are starting points, not a menu — every project gets scoped before it gets priced, and the number you agree is the number you are invoiced.",
   },
   {
-    q: "What happens if it runs late?",
-    a: "If the delay is mine, you do not pay for the extra time. If the scope changed, we re-quote in the open before any extra work happens. I have not missed a delivery date in three years, and the way I protect that is by cutting scope early rather than quietly slipping.",
+    q: "Do you only work with clients in Dubai?",
+    a: "I am based in Dubai and a good deal of the work is local, including Google Business Profile and UAE search visibility. But I have supported international teams across timezones for years, and remote work has never been the hard part of this job.",
   },
   {
-    q: "Who owns the code?",
-    a: "You do, from the first commit. It lives in your repository, deployed to your accounts, with no licence and no lock-in. If you want to take it in-house or hand it to another developer, everything is documented and there is nothing to unpick.",
+    q: "Can you take over a site somebody else built?",
+    a: "Yes, and a lot of my work is exactly that. It starts with an audit: where it is hosted, what it runs on, who can log in, and what is actually still in use. Sometimes the answer is a rebuild and sometimes it is a fix — I will say which before you spend anything.",
   },
   {
-    q: "Can you work with our existing team?",
-    a: "Regularly. I take the frontend slice, review pull requests, and leave the team able to keep building after I go. A handover recording and written architecture notes come as standard, not as an extra.",
+    q: "My site has been hacked. Can you help?",
+    a: "Yes. Malware cleanup and recovery for compromised sites is part of the security work, along with the hardening that stops it happening again: Cloudflare WAF, rate limiting and bot mitigation, automated off-site backups with tested restores, and updates staged before they touch production.",
   },
   {
-    q: "What about hosting and maintenance?",
-    a: "Sites deploy to Vercel or Cloudflare on your account, so you own the bill and it is usually small. Support is included for 30 to 60 days depending on the project. After that you can leave it alone, or keep me on a light retainer for updates.",
+    q: "Do you do SEO as well as the build, or is that separate?",
+    a: "Both, and doing them together is the point. Crawlability, speed, schema and internal linking are handled as part of the build rather than patched on afterwards. Ongoing SEO — audits, keyword research, on-page work and content briefs — runs as a monthly engagement if you want it.",
   },
   {
-    q: "Do you take equity instead of cash?",
-    a: "No. I have tried it twice and both times it made the working relationship worse. Straight invoices keep everybody honest.",
+    q: "Who owns the site and the accounts afterwards?",
+    a: "You do. Handover means documentation, a training session, and every credential transferred to you. You own everything, including the ability to leave. That is deliberate: the most common complaint I hear about previous developers is not the price, it is not being able to walk away.",
+  },
+  {
+    q: "Do you offer ongoing support after launch?",
+    a: "Yes, as a monthly retainer — updates on a staging site first, backups with tested restores, monitoring, and being the person who picks up when something breaks. Plenty of clients stay on it for years; the two case studies on this site are engagements I still maintain.",
   },
 ];
 
@@ -51,7 +55,7 @@ function Item({ q, a, index }: { q: string; a: string; index: number }) {
           data-cursor="link"
           className="group flex w-full items-start justify-between gap-8 py-7 text-left"
         >
-          <span className="font-display text-lg font-medium tracking-tight transition-colors duration-300 group-hover:text-volt md:text-xl">
+          <span className="font-display text-lg font-medium tracking-tight transition-colors duration-300 group-hover:text-accent md:text-xl">
             {q}
           </span>
 
@@ -87,7 +91,7 @@ export default function FAQ() {
   return (
     <section id="faq" className="relative py-28 md:py-40">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <SectionLabel index="05">Questions</SectionLabel>
+        <SectionLabel index="04">Questions</SectionLabel>
 
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <div>
@@ -96,8 +100,8 @@ export default function FAQ() {
               <span className="text-fog"> everyone asks.</span>
             </h2>
             <p className="mt-6 max-w-sm leading-relaxed text-fog">
-              Still unclear on something? Ask me directly — I answer within a
-              day, and I will tell you if I am not the right fit.
+              Still unclear on something? Message me directly — I usually reply
+              within a few hours, and I will tell you if I am not the right fit.
             </p>
           </div>
 

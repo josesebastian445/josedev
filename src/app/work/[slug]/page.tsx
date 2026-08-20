@@ -120,7 +120,7 @@ export default async function CaseStudy({
             <Stagger className="space-y-8" gap={0.09}>
               {project.approach.map((step, i) => (
                 <div key={i} className="flex gap-6 border-t border-line pt-8">
-                  <span className="shrink-0 font-display text-xs tracking-[0.3em] text-volt">
+                  <span className="shrink-0 font-display text-xs tracking-[0.3em] text-accent">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <p className="leading-relaxed text-fog">{step}</p>
@@ -142,7 +142,7 @@ export default async function CaseStudy({
                     &ldquo;{project.quote.text}&rdquo;
                   </blockquote>
                   <figcaption className="mt-7 flex items-center gap-3 border-t border-line pt-6">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-plasma/60 to-volt/40 font-display text-sm font-bold text-ink">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-plasma/60 to-volt/40 font-display text-sm font-bold text-on-accent">
                       {project.quote.name
                         .split(" ")
                         .map((p) => p[0])
@@ -176,11 +176,11 @@ export default async function CaseStudy({
               <div className="mb-3 font-display text-[11px] uppercase tracking-[0.25em] text-fog">
                 Next project
               </div>
-              <div className="font-display text-[clamp(2rem,5vw,4rem)] font-bold tracking-[-0.03em] transition-colors duration-500 group-hover:text-volt">
+              <div className="font-display text-[clamp(2rem,5vw,4rem)] font-bold tracking-[-0.03em] transition-colors duration-500 group-hover:text-accent">
                 {next.title}
               </div>
             </div>
-            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-line transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-ink">
+            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-line transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-on-accent">
               <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M1 7h11M7 2l5 5-5 5"

@@ -105,7 +105,7 @@ export default function Preloader() {
 
           <div className="font-display text-[clamp(3.5rem,14vw,11rem)] font-bold leading-none tracking-[-0.04em] tabular-nums">
             {shown}
-            <span className="text-volt">%</span>
+            <span className="text-accent">%</span>
           </div>
         </div>
 

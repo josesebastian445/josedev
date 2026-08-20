@@ -3,6 +3,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, type RefObject } from "react";
 import * as THREE from "three";
+import { useIsLight } from "@/lib/use-theme-colors";
 
 const COLS = 26;
 const ROWS = 26;
@@ -14,6 +15,7 @@ const COUNT = COLS * ROWS;
  * as the section scrolls in. One draw call for ~700 boxes.
  */
 function Lattice({ progress }: { progress: RefObject<number> }) {
+  const light = useIsLight();
   const mesh = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const eased = useRef(0);
@@ -69,7 +71,11 @@ function Lattice({ progress }: { progress: RefObject<number> }) {
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, COUNT]}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color="#c8ff2e" transparent opacity={0.55} />
+      <meshBasicMaterial
+        color={light ? "#3f5c00" : "#c8ff2e"}
+        transparent
+        opacity={light ? 0.5 : 0.55}
+      />
     </instancedMesh>
   );
 }

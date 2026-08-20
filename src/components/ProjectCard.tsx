@@ -51,7 +51,7 @@ export function ProjectMeta({ project }: { project: Project }) {
     <div className="flex items-end justify-between gap-6 border-t border-line p-6 md:p-7">
       <div>
         <div className="mb-2 flex items-center gap-3">
-          <span className="font-display text-xs text-volt">{project.index}</span>
+          <span className="font-display text-xs text-accent">{project.index}</span>
           <span className="font-display text-xs uppercase tracking-[0.2em] text-fog">
             {project.client} · {project.year}
           </span>
@@ -71,7 +71,7 @@ export function ProjectMeta({ project }: { project: Project }) {
         </div>
       </div>
 
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line text-fog transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-ink">
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line text-fog transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-on-accent">
         <svg width="15" height="15" viewBox="0 0 14 14" fill="none">
           <path
             d="M3 11L11 3M11 3H4.5M11 3v6.5"

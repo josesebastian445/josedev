@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+/*
+ * Colour roles, not colour names.
+ *
+ * Most tokens simply flip between themes. The three accent roles exist because
+ * an acid-lime brand does not survive a naive flip:
+ *
+ *   --color-volt       the accent as a FILL or graphic. Always light enough to
+ *                      carry near-black text on top of it.
+ *   --color-accent     the accent as TEXT or a hairline, on the page
+ *                      background. Must clear 4.5:1 — which #c8ff2e does not
+ *                      do on white, hence the olive in light mode.
+ *   --color-on-accent  text sitting ON a volt fill. Constant near-black in
+ *                      both themes, because the fill is near-constant.
+ *
+ * Getting this wrong gives you lime-on-white body text, or white text on a
+ * lime button. Both happened before these were split apart.
+ */
 @theme {
   --color-ink: #05060a;
   --color-ink-2: #0a0c12;
@@ -7,9 +24,52 @@
   --color-line: #1e2230;
   --color-fog: #8b8fa3;
   --color-bone: #e8e9ee;
+
   --color-volt: #c8ff2e;
+  --color-accent: #c8ff2e;
+  --color-on-accent: #05060a;
+
   --color-plasma: #6b5bff;
   --color-ember: #ff5c39;
+
+  /* alpha used by the big volt glows; toned right down in light mode, where a
+     45%-opacity lime radial reads as a yellow smear rather than a glow */
+  --glow-volt: 0.45;
+  --glow-plasma: 0.16;
+  --glow-spot: 0.1;
+
+  /* Named so the ambient washes stop being hand-rolled rgba() inside arbitrary
+     Tailwind values — those cannot reference a theme variable safely. */
+  --background-image-glow-hero: radial-gradient(
+    ellipse at 50% 45%,
+    rgb(107 91 255 / var(--glow-plasma)),
+    transparent 62%
+  );
+  --background-image-glow-page-a: radial-gradient(
+    ellipse at 25% 0%,
+    rgb(107 91 255 / var(--glow-plasma)),
+    transparent 58%
+  );
+  --background-image-glow-page-b: radial-gradient(
+    ellipse at 85% 10%,
+    rgb(200 255 46 / var(--glow-spot)),
+    transparent 52%
+  );
+  --background-image-glow-close: radial-gradient(
+    ellipse at 50% 60%,
+    rgb(200 255 46 / var(--glow-volt)),
+    transparent 60%
+  );
+  --background-image-glow-band: radial-gradient(
+    ellipse at 50% 70%,
+    rgb(200 255 46 / var(--glow-volt)),
+    transparent 62%
+  );
+  --background-image-glow-knot: radial-gradient(
+    circle at 50% 40%,
+    rgb(107 91 255 / var(--glow-plasma)),
+    transparent 65%
+  );
 
   --font-display: var(--font-space), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -17,8 +77,46 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-:root {
+:root,
+[data-theme="dark"] {
   color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --color-ink: #fbfbfa; /* page */
+  --color-ink-2: #f3f3f1; /* raised card */
+  --color-surface: #ebebe8; /* control */
+  --color-line: #e0e0dc; /* hairline */
+  --color-fog: #5f6372; /* 6.4:1 — secondary text */
+  --color-bone: #14161c; /* primary text, and the inverse fill */
+
+  --color-volt: #9ecf00; /* still takes near-black text at 12:1 */
+  --color-accent: #46630a; /* 7.2:1 as text on the page */
+  --color-on-accent: #05060a;
+
+  --color-plasma: #4b3ce0;
+  --color-ember: #c9361a;
+
+  --glow-volt: 0.14;
+  --glow-plasma: 0.1;
+  --glow-spot: 0.14;
+}
+
+/* Colour changes are cross-faded rather than snapping, but only on the few
+   properties that actually carry the theme — animating `all` here would fight
+   every hover transition on the page. */
+html.theme-ready body,
+html.theme-ready body * {
+  transition: background-color 220ms ease, border-color 220ms ease,
+    color 220ms ease, fill 220ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-ready body,
+  html.theme-ready body * {
+    transition: none;
+  }
 }
 
 /* Must live in @layer base: unlayered CSS outranks every layered utility,
@@ -58,7 +156,7 @@ html.lenis body {
 
 ::selection {
   background: var(--color-volt);
-  color: #05060a;
+  color: var(--color-on-accent);
 }
 
 ::-webkit-scrollbar {

@@ -3,20 +3,19 @@
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
+import { SITE, MAILTO, TEL } from "@/content/site";
 
-const SITE = [
+const NAV = [
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
   { label: "Writing", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 
-// TODO: swap the remaining placeholder hrefs for real profile URLs
-const SOCIAL = [
-  { label: "GitHub", href: "https://github.com/josesebastian445" },
-  { label: "Read.cv", href: "#" },
-  { label: "X", href: "#" },
-  { label: "LinkedIn", href: "#" },
+const CONTACT = [
+  { label: SITE.email, href: MAILTO },
+  { label: SITE.phone, href: TEL },
+  { label: "WhatsApp", href: SITE.whatsapp, external: true },
 ];
 
 export default function Footer() {
@@ -32,20 +31,20 @@ export default function Footer() {
 
   return (
     <footer ref={ref} className="relative overflow-hidden border-t border-line">
-      <div className="mx-auto max-w-[1400px] px-6 pt-20 md:px-10">
-        <div className="flex flex-wrap items-start justify-between gap-12 pb-20">
+      <div className="mx-auto max-w-[1400px] px-6 pt-14 md:px-10">
+        <div className="flex flex-wrap items-start justify-between gap-10 pb-12">
           <div>
             <div className="font-display text-sm font-bold tracking-tight">
               JOSE<span className="text-fog">.SEBASTIAN</span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-fog">
-              Web developer and interface engineer. Lisbon, working with teams
-              anywhere in GMT ±3.
+              IT Manager and web developer in Dubai. Websites that load fast,
+              rank well and don&rsquo;t fall over.
             </p>
             <div className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-line px-3.5 py-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-volt" />
               <span className="font-display text-[11px] tracking-[0.15em] text-fog">
-                AVAILABLE FOR Q4
+                AVAILABLE FOR PROJECTS
               </span>
             </div>
           </div>
@@ -56,7 +55,7 @@ export default function Footer() {
                 Site
               </div>
               <ul className="space-y-2.5">
-                {SITE.map((l) => (
+                {NAV.map((l) => (
                   <li key={l.href}>
                     <Link
                       href={l.href}
@@ -73,21 +72,27 @@ export default function Footer() {
 
             <div>
               <div className="mb-4 font-display text-[11px] uppercase tracking-[0.22em] text-fog">
-                Elsewhere
+                Get in touch
               </div>
               <ul className="space-y-2.5">
-                {SOCIAL.map((s) => (
-                  <li key={s.label}>
+                {CONTACT.map((c) => (
+                  <li key={c.label}>
                     <a
-                      href={s.href}
+                      href={c.href}
                       data-cursor="link"
+                      {...(c.external
+                        ? { target: "_blank", rel: "noreferrer" }
+                        : {})}
                       className="group relative font-display text-sm text-bone"
                     >
-                      {s.label}
+                      {c.label}
                       <span className="absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-volt transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-hover:scale-x-100" />
                     </a>
                   </li>
                 ))}
+                <li className="pt-1 font-display text-sm text-fog">
+                  {SITE.location}
+                </li>
               </ul>
             </div>
           </nav>
@@ -97,15 +102,15 @@ export default function Footer() {
         <div className="overflow-hidden">
           <motion.div
             style={{ y, opacity }}
-            className="select-none whitespace-nowrap font-display text-[clamp(2rem,11.2vw,10.5rem)] font-bold leading-[0.85] tracking-[-0.04em] text-bone/[0.07]"
+            className="select-none whitespace-nowrap font-display text-[clamp(1.6rem,7.4vw,6rem)] font-bold leading-[0.8] tracking-[-0.04em] text-bone/[0.07]"
           >
             JOSE SEBASTIAN
           </motion.div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line py-7 font-display text-xs text-fog">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-line py-5 font-display text-xs text-fog">
           <span>&copy; {new Date().getFullYear()} Jose Sebastian. All rights reserved.</span>
-          <span>Built with Next.js, Three.js and too much coffee.</span>
+          <span>Built with Next.js and Three.js. Hosted on Cloudflare.</span>
         </div>
       </div>
     </footer>

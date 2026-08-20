@@ -146,7 +146,7 @@ export function SectionLabel({
 }) {
   return (
     <Reveal className="mb-8 flex items-center gap-4">
-      <span className="font-display text-xs tracking-[0.3em] text-volt">
+      <span className="font-display text-xs tracking-[0.3em] text-accent">
         {index}
       </span>
       <span className="h-px w-10 bg-line" />

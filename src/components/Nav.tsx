@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useEffect, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 const LINKS = [
   { label: "Work", href: "/work" },
@@ -14,15 +15,13 @@ const LINKS = [
 export default function Nav() {
   const { scrollY } = useScroll();
   const pathname = usePathname();
-  const [hidden, setHidden] = useState(false);
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // The header stays pinned the whole way down — it only condenses into the
+  // floating pill once you leave the top of the page.
   useMotionValueEvent(scrollY, "change", (y) => {
-    const prev = scrollY.getPrevious() ?? 0;
     setSolid(y > 40);
-    // hide on the way down, reveal the moment you scroll back up
-    setHidden(y > prev && y > 240 && !open);
   });
 
   // close the sheet on navigation
@@ -36,7 +35,7 @@ export default function Nav() {
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
-      animate={{ y: hidden ? -96 : 0, opacity: 1 }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="fixed inset-x-0 top-0 z-50"
     >
@@ -78,10 +77,12 @@ export default function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
+
           <Link
             href="/contact"
             data-cursor="link"
-            className="group relative hidden overflow-hidden rounded-full border border-volt/50 px-5 py-2.5 font-display text-sm font-medium text-volt transition-colors duration-400 hover:text-ink sm:block"
+            className="group relative hidden overflow-hidden rounded-full border border-volt/50 px-5 py-2.5 font-display text-sm font-medium text-accent transition-colors duration-400 hover:text-on-accent sm:block"
           >
             <span className="relative z-10">Start a project</span>
             <span className="absolute inset-0 origin-bottom scale-y-0 bg-volt transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-y-100" />
@@ -130,6 +131,13 @@ export default function Nav() {
               </Link>
             </motion.div>
           ))}
+
+          <div className="flex items-center justify-between pt-5">
+            <span className="font-display text-[11px] uppercase tracking-[0.22em] text-fog">
+              Appearance
+            </span>
+            <ThemeToggle />
+          </div>
         </div>
       </motion.div>
     </motion.header>

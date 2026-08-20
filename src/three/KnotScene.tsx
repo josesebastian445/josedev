@@ -3,12 +3,14 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, type RefObject } from "react";
 import * as THREE from "three";
+import { useIsLight } from "@/lib/use-theme-colors";
 
 /**
  * A wireframe knot whose rotation is bound to the host section's scroll
  * progress, so it feels scrubbed rather than merely animated.
  */
 function Knot({ progress }: { progress: RefObject<number> }) {
+  const light = useIsLight();
   const group = useRef<THREE.Group>(null);
   const eased = useRef(0);
 
@@ -36,11 +38,21 @@ function Knot({ progress }: { progress: RefObject<number> }) {
     <group ref={group}>
       <mesh>
         <torusKnotGeometry args={[1.15, 0.3, 220, 24]} />
-        <meshBasicMaterial color="#6b5bff" wireframe transparent opacity={0.45} />
+        <meshBasicMaterial
+          color={light ? "#4b3ce0" : "#6b5bff"}
+          wireframe
+          transparent
+          opacity={light ? 0.32 : 0.45}
+        />
       </mesh>
       <mesh scale={1.28}>
         <icosahedronGeometry args={[1.15, 1]} />
-        <meshBasicMaterial color="#c8ff2e" wireframe transparent opacity={0.12} />
+        <meshBasicMaterial
+          color={light ? "#3f5c00" : "#c8ff2e"}
+          wireframe
+          transparent
+          opacity={light ? 0.16 : 0.12}
+        />
       </mesh>
     </group>
   );

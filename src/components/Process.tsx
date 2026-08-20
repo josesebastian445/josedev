@@ -15,27 +15,27 @@ const KnotScene = dynamic(() => import("@/three/KnotScene"), { ssr: false });
 const STEPS = [
   {
     n: "01",
-    title: "Scope",
-    body: "A 45-minute call, then a written plan: what we build, what we cut, what it costs. No discovery phase that bills for a month.",
-    meta: "Week 0 · Free",
+    title: "Conversation",
+    body: "A call or a WhatsApp thread. You describe the problem, I ask the awkward questions about budget and deadlines early rather than late.",
+    meta: "Free",
   },
   {
     n: "02",
-    title: "Design",
-    body: "Layout, type and motion decided in the browser, not in a static mockup. You see the real thing moving by the end of week one.",
-    meta: "Week 1–2",
+    title: "Proposal",
+    body: "A written scope with a fixed price or a clear rate, a timeline, and what is explicitly not included. No surprises on the invoice.",
+    meta: "In writing",
   },
   {
     n: "03",
     title: "Build",
-    body: "Typed, componentised, deployed to a preview URL from day one. You watch it come together instead of waiting for a reveal.",
-    meta: "Week 2–5",
+    body: "Work happens in the open. You get a staging link from day one and can watch it come together instead of waiting for a reveal.",
+    meta: "Staging from day one",
   },
   {
     n: "04",
-    title: "Ship",
-    body: "Performance pass, accessibility pass, analytics wired, CMS handed over with a walkthrough recording. Then 30 days of support.",
-    meta: "Week 5–6",
+    title: "Handover",
+    body: "Documentation, a training session, and every credential transferred to you. You own everything, including the ability to leave.",
+    meta: "You own it",
   },
 ];
 
@@ -62,15 +62,20 @@ export default function Process() {
   return (
     <section id="process" ref={ref} className="relative py-32 md:py-44">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <SectionLabel index="04">How it goes</SectionLabel>
+        <SectionLabel index="03">How it works</SectionLabel>
 
         <div className="grid gap-16 lg:grid-cols-[1fr_0.85fr] lg:gap-24">
           {/* steps */}
           <div>
-            <h2 className="mb-14 max-w-xl font-display text-[clamp(2rem,5vw,4rem)] font-bold leading-[0.98] tracking-[-0.03em]">
-              Six weeks,
-              <span className="text-fog"> four checkpoints, no surprises.</span>
+            <h2 className="max-w-xl font-display text-[clamp(2rem,5vw,4rem)] font-bold leading-[0.98] tracking-[-0.03em]">
+              No mystery,
+              <span className="text-fog"> no lock-in.</span>
             </h2>
+            <p className="mb-14 mt-6 max-w-xl leading-relaxed text-fog">
+              The most common complaint I hear about previous developers is not
+              the price. It is not knowing what was happening, and not being
+              able to leave afterwards.
+            </p>
 
             <div className="relative pl-10">
               {/* the rail fills as you scroll the section */}
@@ -103,7 +108,7 @@ export default function Process() {
                   >
                     <span
                       className={`h-1.5 w-1.5 rounded-full transition-colors duration-500 ${
-                        i <= active ? "bg-ink" : "bg-fog/40"
+                        i <= active ? "bg-on-accent" : "bg-fog/40"
                       }`}
                     />
                   </span>
@@ -111,7 +116,7 @@ export default function Process() {
                   <div className="mb-2 flex items-center gap-4">
                     <span
                       className={`font-display text-xs tracking-[0.3em] transition-colors duration-500 ${
-                        i <= active ? "text-volt" : "text-fog/50"
+                        i <= active ? "text-accent" : "text-fog/50"
                       }`}
                     >
                       {s.n}
@@ -139,7 +144,7 @@ export default function Process() {
           {/* WebGL companion, pinned alongside the steps */}
           <div className="relative hidden lg:block">
             <div className="sticky top-24 h-[70vh]">
-              <div className="absolute inset-0 rounded-3xl border border-line bg-[radial-gradient(circle_at_50%_40%,rgba(107,91,255,0.10),transparent_65%)]" />
+              <div className="absolute inset-0 rounded-3xl border border-line bg-glow-knot" />
               <KnotScene progress={progressRef} />
               {/* scrim so the geometry never sits on top of the caption */}
               <div className="pointer-events-none absolute inset-x-px bottom-px h-40 rounded-b-3xl bg-gradient-to-t from-ink via-ink/85 to-transparent" />

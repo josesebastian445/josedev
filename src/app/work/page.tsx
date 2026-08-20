@@ -8,7 +8,7 @@ import { PROJECTS } from "@/content/projects";
 export const metadata: Metadata = {
   title: "Work — Jose Sebastian",
   description:
-    "Selected projects: booking platforms, dashboards, storefronts and portfolio sites, each with the metric the client actually cared about.",
+    "Long engagements rather than one-off builds: multi-site web estates, WooCommerce portfolios, SEO and the IT layer underneath them.",
 };
 
 export default function WorkPage() {
@@ -16,13 +16,13 @@ export default function WorkPage() {
     <main>
       <PageHero
         eyebrow="Selected work"
-        title="Six builds, and what they moved."
-        lede="Every project here shipped to production and changed a number somebody was measuring. Open one to see the brief, the approach and what happened afterwards."
+        title="Things I've built and kept running."
+        lede="Long engagements rather than one-off builds — which means these are systems I still maintain, not screenshots from a portfolio."
         meta={[
-          { label: "Projects", value: String(PROJECTS.length) },
-          { label: "Years", value: "2023 — 2025" },
-          { label: "Typical duration", value: "4 — 14 weeks" },
-          { label: "Delivered on date", value: "100%" },
+          { label: "Engagements", value: String(PROJECTS.length) },
+          { label: "Experience", value: "7+ years" },
+          { label: "Uptime maintained", value: "99.9%" },
+          { label: "Based in", value: "Dubai, UAE" },
         ]}
       />
 

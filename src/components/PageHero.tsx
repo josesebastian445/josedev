@@ -25,8 +25,8 @@ export default function PageHero({
   return (
     <header className="relative overflow-hidden border-b border-line pb-16 pt-40 md:pb-24 md:pt-48">
       {/* soft ambient wash, no WebGL cost on inner pages */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_25%_0%,rgba(107,91,255,0.14),transparent_58%)]" />
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_85%_10%,rgba(200,255,46,0.07),transparent_52%)]" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-glow-page-a" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-glow-page-b" />
 
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         {backHref && (
@@ -41,7 +41,7 @@ export default function PageHero({
               data-cursor="link"
               className="group inline-flex items-center gap-3 font-display text-sm text-fog transition-colors hover:text-bone"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-line transition-all duration-400 group-hover:border-volt group-hover:bg-volt group-hover:text-ink">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-line transition-all duration-400 group-hover:border-volt group-hover:bg-volt group-hover:text-on-accent">
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                   <path
                     d="M13 7H2M7 2L2 7l5 5"

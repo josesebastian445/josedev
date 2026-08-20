@@ -5,8 +5,15 @@ import { useFormStatus } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { submitContact } from "@/app/actions";
 import { initialContactState } from "@/lib/contact";
+import { SITE, MAILTO } from "@/content/site";
 
-const BUDGETS = ["< €5k", "€5k – €15k", "€15k – €40k", "€40k +", "Not sure yet"];
+const BUDGETS = [
+  "< AED 10k",
+  "AED 10k – 30k",
+  "AED 30k +",
+  "Monthly retainer",
+  "Not sure yet",
+];
 
 function Submit() {
   const { pending } = useFormStatus();
@@ -15,7 +22,7 @@ function Submit() {
       type="submit"
       disabled={pending}
       data-cursor="link"
-      className="group relative w-full overflow-hidden rounded-full bg-volt px-8 py-5 font-display text-lg font-semibold text-ink transition-opacity disabled:opacity-60 sm:w-auto sm:px-12"
+      className="group relative w-full overflow-hidden rounded-full bg-volt px-8 py-5 font-display text-lg font-semibold text-on-accent transition-[color,opacity] duration-400 group-hover:text-ink disabled:opacity-60 sm:w-auto sm:px-12"
     >
       <span className="relative z-10 flex items-center justify-center gap-3">
         {pending ? "Sending…" : "Send it"}
@@ -54,7 +61,7 @@ export default function ContactForm() {
           initial={{ scale: 0.4, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-7 flex h-14 w-14 items-center justify-center rounded-full bg-volt text-ink"
+          className="mb-7 flex h-14 w-14 items-center justify-center rounded-full bg-volt text-on-accent"
         >
           <svg width="22" height="22" viewBox="0 0 14 14" fill="none">
             <path
@@ -74,10 +81,10 @@ export default function ContactForm() {
           I read everything myself and reply within one working day. If it is
           urgent, email me directly at{" "}
           <a
-            href="mailto:hello@josesebastian.dev"
+            href={MAILTO}
             className="border-b border-volt/50 text-bone transition-colors hover:border-volt"
           >
-            hello@josesebastian.dev
+            {SITE.email}
           </a>
           .
         </p>
@@ -165,7 +172,7 @@ export default function ContactForm() {
                 defaultChecked={state.values?.budget === b}
                 className="peer sr-only"
               />
-              <span className="block rounded-full border border-line px-4 py-2.5 font-display text-sm text-fog transition-all duration-300 hover:border-fog/50 peer-checked:border-volt peer-checked:bg-volt peer-checked:text-ink peer-focus-visible:ring-2 peer-focus-visible:ring-volt/50">
+              <span className="block rounded-full border border-line px-4 py-2.5 font-display text-sm text-fog transition-all duration-300 hover:border-fog/50 peer-checked:border-volt peer-checked:bg-volt peer-checked:text-on-accent peer-focus-visible:ring-2 peer-focus-visible:ring-volt/50">
                 {b}
               </span>
             </label>
@@ -219,11 +226,11 @@ export default function ContactForm() {
         <p className="text-sm text-fog">
           Or email{" "}
           <a
-            href="mailto:hello@josesebastian.dev"
+            href={MAILTO}
             data-cursor="link"
             className="border-b border-line text-bone transition-colors hover:border-volt"
           >
-            hello@josesebastian.dev
+            {SITE.email}
           </a>
         </p>
       </div>

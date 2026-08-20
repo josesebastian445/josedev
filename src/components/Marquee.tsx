@@ -13,16 +13,26 @@ import {
 import { useRef } from "react";
 
 const ITEMS = [
+  "WordPress",
   "Next.js",
-  "TypeScript",
+  "Astro",
   "React",
-  "WebGL / Three.js",
+  "TypeScript",
   "Tailwind",
-  "Node",
-  "Postgres",
-  "Motion Design",
-  "Core Web Vitals",
-  "Design Systems",
+  "WooCommerce",
+  "MySQL",
+  "SQL Server",
+  "AWS",
+  "Hetzner",
+  "Cloudflare",
+  "FortiGate",
+  "Ahrefs",
+  "SEMrush",
+  "Screaming Frog",
+  "Google Analytics",
+  "Search Console",
+  "GitHub Actions",
+  "Office 365",
 ];
 
 /**

@@ -7,6 +7,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import Cursor from "@/components/Cursor";
 import Preloader from "@/components/Preloader";
 import Footer from "@/components/Footer";
+import { THEME_BOOT_SCRIPT } from "@/lib/theme";
 
 const space = Space_Grotesk({
   subsets: ["latin"],
@@ -21,14 +22,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Jose Sebastian — Web Developer & Interface Engineer",
+  title: "Jose Sebastian — IT Manager & Web Developer in Dubai",
   description:
-    "Freelance web developer building fast, tactile, motion-driven interfaces with Next.js, WebGL and TypeScript.",
-  metadataBase: new URL("https://josesebastian.dev"),
+    "IT Manager and web developer in Dubai. Websites that load fast, rank high and stay up — build, hosting, security and SEO, handled end to end.",
+  metadataBase: new URL("https://joseviews.com"),
   openGraph: {
-    title: "Jose Sebastian — Web Developer & Interface Engineer",
+    title: "Jose Sebastian — IT Manager & Web Developer in Dubai",
     description:
-      "Freelance web developer building fast, tactile, motion-driven interfaces.",
+      "Websites that load fast, rank high and stay up. Dubai-based, 7+ years, build to hosting to SEO.",
     type: "website",
   },
 };
@@ -39,7 +40,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${space.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`${space.variable} ${inter.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Sets data-theme before first paint. Without it the page renders in
+            the server's dark default and snaps to light on hydration. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body className="grain antialiased">
         <Preloader />
         <SmoothScroll>

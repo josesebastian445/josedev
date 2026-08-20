@@ -91,6 +91,51 @@ function Blocks({ blocks }: { blocks: Block[] }) {
                 </div>
               </Reveal>
             );
+          case "table":
+            return (
+              <Reveal key={i}>
+                {/* the wrapper scrolls, not the page — a 3-column table at
+                    760px is tight on a phone */}
+                <div className="mb-10 overflow-x-auto rounded-xl border border-line">
+                  <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-line">
+                        {b.head.map((h) => (
+                          <th
+                            key={h}
+                            scope="col"
+                            className="px-5 py-4 font-display text-[11px] uppercase tracking-[0.18em] text-fog"
+                          >
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {b.rows.map((row) => (
+                        <tr
+                          key={row[0]}
+                          className="border-b border-line last:border-b-0"
+                        >
+                          {row.map((cell, c) => (
+                            <td
+                              key={c}
+                              className={`px-5 py-4 align-top leading-relaxed ${
+                                c === 0
+                                  ? "font-display font-medium text-bone"
+                                  : "text-fog"
+                              }`}
+                            >
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Reveal>
+            );
         }
       })}
     </>
@@ -143,11 +188,11 @@ export default async function PostPage({
               <div className="mb-3 font-display text-[11px] uppercase tracking-[0.25em] text-fog">
                 Read next
               </div>
-              <div className="font-display text-[clamp(1.5rem,3.5vw,2.75rem)] font-bold leading-tight tracking-[-0.03em] transition-colors duration-500 group-hover:text-volt">
+              <div className="font-display text-[clamp(1.5rem,3.5vw,2.75rem)] font-bold leading-tight tracking-[-0.03em] transition-colors duration-500 group-hover:text-accent">
                 {next.title}
               </div>
             </div>
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-line transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-ink">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-line transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-on-accent">
               <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M1 7h11M7 2l5 5-5 5"

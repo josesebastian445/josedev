@@ -9,7 +9,7 @@ import { POSTS } from "@/content/posts";
 export const metadata: Metadata = {
   title: "Writing — Jose Sebastian",
   description:
-    "Notes on frontend engineering: cascade layers, scroll-linked animation, sticky positioning, and what I check before calling a build done.",
+    "Notes from the work: technical SEO, WordPress and Next.js, and practical security for small offices in Dubai.",
 };
 
 export default function BlogPage() {
@@ -19,8 +19,8 @@ export default function BlogPage() {
     <main>
       <PageHero
         eyebrow="Writing"
-        title="Notes from the build."
-        lede="Mostly bugs that cost me an afternoon and the explanation I wish I had found first. No hot takes, no listicles."
+        title="Notes from the work."
+        lede="A new post most weeks — usually something I had to figure out for a client that week, written down so the next person does not have to."
       />
 
       <section className="py-16 md:py-24">

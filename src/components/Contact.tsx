@@ -11,6 +11,7 @@ import {
 } from "motion/react";
 import { useRef } from "react";
 import { SplitText } from "./motion-primitives";
+import { SITE } from "@/content/site";
 
 const LatticeScene = dynamic(() => import("@/three/LatticeScene"), {
   ssr: false,
@@ -50,7 +51,7 @@ function MagneticButton({
       style={{ x, y }}
       onPointerMove={onMove}
       onPointerLeave={reset}
-      className="group relative inline-flex items-center gap-4 overflow-hidden rounded-full bg-volt px-10 py-6 font-display text-lg font-semibold text-ink md:px-14 md:py-8 md:text-2xl"
+      className="group relative inline-flex items-center gap-4 overflow-hidden rounded-full bg-volt px-10 py-6 font-display text-lg font-semibold text-on-accent transition-colors duration-400 group-hover:text-ink md:px-14 md:py-8 md:text-2xl"
     >
       <span className="relative z-10 flex items-center gap-4">{children}</span>
       <span className="absolute inset-0 origin-bottom scale-y-0 bg-bone transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-y-100" />
@@ -85,25 +86,25 @@ export default function Contact() {
 
       <motion.div
         style={{ opacity: glow }}
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_60%,rgba(200,255,46,0.5),transparent_60%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-glow-close"
       />
 
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10">
         <div className="mb-8 flex items-center gap-4">
-          <span className="font-display text-xs tracking-[0.3em] text-volt">
+          <span className="font-display text-xs tracking-[0.3em] text-accent">
             06
           </span>
           <span className="h-px w-10 bg-line" />
           <span className="font-display text-xs uppercase tracking-[0.3em] text-fog">
-            Next step
+            Let&rsquo;s talk
           </span>
         </div>
 
-        <h2 className="max-w-5xl font-display text-[clamp(2.5rem,8vw,7rem)] font-bold leading-[0.94] tracking-[-0.035em]">
-          <SplitText text="Got something" />
+        <h2 className="max-w-5xl font-display text-[clamp(2.5rem,7vw,6rem)] font-bold leading-[0.94] tracking-[-0.035em]">
+          <SplitText text="Got a project that needs" />
           <br />
           <span className="text-fog">
-            <SplitText text="worth building?" delay={0.12} />
+            <SplitText text="building or fixing?" delay={0.12} />
           </span>
         </h2>
 
@@ -114,8 +115,9 @@ export default function Contact() {
           transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="mt-8 max-w-lg text-lg leading-relaxed text-fog"
         >
-          Tell me the deadline and the problem. I&rsquo;ll tell you within a day
-          whether I&rsquo;m the right person — and if not, who is.
+          Tell me what you&rsquo;re trying to achieve. I&rsquo;ll come back with
+          an honest read on scope, timeline and whether I&rsquo;m the right
+          person for it.
         </motion.p>
 
         <motion.div
@@ -138,19 +140,26 @@ export default function Contact() {
             </svg>
           </MagneticButton>
 
-          <div className="font-display text-sm text-fog">
-            <div className="mb-1 text-[11px] uppercase tracking-[0.2em]">
-              Or email directly
-            </div>
-            <a
-              href="mailto:hello@josesebastian.dev"
-              data-cursor="link"
-              className="border-b border-line pb-0.5 text-bone transition-colors hover:border-volt"
-            >
-              hello@josesebastian.dev &rarr;
-            </a>
-          </div>
+          <a
+            href={SITE.whatsapp}
+            target="_blank"
+            rel="noreferrer"
+            data-cursor="link"
+            className="rounded-full border border-line px-8 py-4 font-display font-medium text-bone transition-colors duration-400 hover:border-volt/60 hover:bg-bone/5"
+          >
+            Message on WhatsApp
+          </a>
         </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, delay: 0.6 }}
+          className="mt-8 font-display text-xs uppercase tracking-[0.2em] text-fog"
+        >
+          Typically replies within a few hours · Dubai time
+        </motion.p>
       </div>
     </section>
   );
