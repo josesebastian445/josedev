@@ -70,11 +70,23 @@ next/previous links all follow automatically.
 `src/app/actions.ts` is a server action that validates server-side (name, email
 format, message length) and carries a honeypot field.
 
-> **Email delivery is off by default.** Without `RESEND_API_KEY`,
-> `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL` set, a submission is validated and
-> logged to the server console, and the visitor still sees the success state.
-> Copy `.env.example` to `.env.local` and fill it in before putting this in
-> front of real traffic.
+Delivery goes through **Cloudflare Email Routing** — no third-party provider.
+The `cloudflare:email` module can only be imported from code wrangler bundles
+itself, so the actual send lives in `custom-worker.js` (a custom entrypoint
+wrapping the OpenNext worker, holding the `CONTACT_EMAIL` send_email binding).
+The server action reaches it through `WORKER_SELF_REFERENCE`, authenticated
+with the `CONTACT_INTERNAL_KEY` wrangler secret so the route can't be used as
+an open relay.
+
+To/from addresses are `vars` in `wrangler.jsonc`. Constraints from Cloudflare:
+the recipient must be a **verified destination address** on the account, and
+the sender must be on a domain with Email Routing enabled.
+
+> **Delivery silently degrades.** Outside the Workers runtime (plain
+> `next dev`) or with `CONTACT_INTERNAL_KEY` unset, a submission is validated
+> and logged to the server console, and the visitor still sees the success
+> state. Set the secret with `npx wrangler secret put CONTACT_INTERNAL_KEY`
+> before putting this in front of real traffic.
 
 Note that `lib/contact.ts` holds the state type and initial value rather than
 `actions.ts`: a `"use server"` module may only export async functions, and
@@ -115,8 +127,9 @@ Both the package name and `wrangler.jsonc` say `josedev`. **If you rename the
 Cloudflare Workers project, change `name` and the `WORKER_SELF_REFERENCE`
 service in `wrangler.jsonc` to match it.**
 
-Env vars for the contact form go in the Workers dashboard under Settings →
-Variables (as secrets), not in `.env` — see `.env.example` for the names.
+The contact form needs the `CONTACT_INTERNAL_KEY` secret on the worker
+(`npx wrangler secret put CONTACT_INTERNAL_KEY --name josedev`); the email
+addresses live as `vars` in `wrangler.jsonc`.
 
 ## Verifying
 

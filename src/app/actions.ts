@@ -1,5 +1,6 @@
 "use server";
 
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import type { ContactState } from "@/lib/contact";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -32,45 +33,42 @@ export async function submitContact(
     return { status: "error", errors, values };
   }
 
-  const to = process.env.CONTACT_TO_EMAIL;
-  const from = process.env.CONTACT_FROM_EMAIL;
-  const key = process.env.RESEND_API_KEY;
+  // Delivery goes through Cloudflare Email Routing. The send_email binding
+  // lives in custom-worker.js (cloudflare:email cannot be imported from
+  // Next-bundled code), so we call back into our own worker through the
+  // WORKER_SELF_REFERENCE service binding, authenticated with a shared secret.
+  // Outside the Workers runtime (plain `next dev`, missing secret) the
+  // submission is logged server-side and the visitor still gets a success
+  // state — see README before putting this in front of real traffic.
+  let env: CloudflareEnv | undefined;
+  try {
+    env = getCloudflareContext().env;
+  } catch {
+    env = undefined;
+  }
+  const worker = env?.WORKER_SELF_REFERENCE;
+  const key = env?.CONTACT_INTERNAL_KEY;
 
-  // Delivery is only attempted when the provider is configured. Without the
-  // env vars the submission is logged server-side and the visitor still gets a
-  // success state — see README before putting this in front of real traffic.
-  if (!key || !to || !from) {
+  if (!worker || !key) {
     console.warn(
-      "[contact] RESEND_API_KEY / CONTACT_TO_EMAIL / CONTACT_FROM_EMAIL not set — message logged, not delivered:",
+      "[contact] email delivery not configured — message logged, not delivered:",
       { name, email, budget, message }
     );
     return { status: "success" };
   }
 
   try {
-    const res = await fetch("https://api.resend.com/emails", {
+    const res = await worker.fetch("https://self/__internal/contact-email", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
+        "x-internal-key": key,
       },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        reply_to: email,
-        subject: `New enquiry from ${name}${budget ? ` · ${budget}` : ""}`,
-        text: [
-          `Name:    ${name}`,
-          `Email:   ${email}`,
-          `Budget:  ${budget || "not given"}`,
-          "",
-          message,
-        ].join("\n"),
-      }),
+      body: JSON.stringify({ name, email, budget, message }),
     });
 
     if (!res.ok) {
-      console.error("[contact] provider rejected the message", await res.text());
+      console.error("[contact] delivery rejected", await res.text());
       return {
         status: "error",
         message: "Something broke on my end. Email me directly instead.",

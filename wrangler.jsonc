@@ -4,7 +4,9 @@
   // WORKER_SELF_REFERENCE service binding from this value, so if it disagrees
   // with the deployed script name the deploy fails with error 10143.
   "name": "josedev",
-  "main": ".open-next/worker.js",
+  // Custom entrypoint wrapping .open-next/worker.js — owns the send_email
+  // binding for the contact form (see custom-worker.js).
+  "main": "custom-worker.js",
   "compatibility_date": "2026-08-15",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
@@ -19,6 +21,21 @@
   ],
   "images": {
     "binding": "IMAGES"
+  },
+  // Sends via Cloudflare Email Routing. Recipients must be verified
+  // destination addresses on the account. CONTACT_INTERNAL_KEY (a wrangler
+  // secret) gates the internal send route in custom-worker.js.
+  "send_email": [
+    {
+      "name": "CONTACT_EMAIL"
+    }
+  ],
+  "vars": {
+    // NOT hi@joseviews.com: Workers may only send to *verified destination
+    // addresses*, and hi@ is a routing alias — this is the inbox it forwards
+    // to anyway ("destination address is not a verified address" otherwise).
+    "CONTACT_TO_EMAIL": "iamjoseph.sebastian@gmail.com",
+    "CONTACT_FROM_EMAIL": "contact@joseviews.com"
   },
   "observability": {
     "enabled": true
