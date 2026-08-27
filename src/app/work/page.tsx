@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Work — Jose Sebastian",
   description:
     "Long engagements rather than one-off builds: multi-site web estates, WooCommerce portfolios, SEO and the IT layer underneath them.",
+  alternates: { canonical: "/work" },
 };
 
 export default function WorkPage() {

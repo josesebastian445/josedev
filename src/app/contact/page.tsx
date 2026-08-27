@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Contact — Jose Sebastian",
   description:
     "Tell me what you are trying to achieve. I usually reply within a few hours, Dubai time, and I will tell you if I am not the right fit.",
+  alternates: { canonical: "/contact" },
 };
 
 const DETAILS = [

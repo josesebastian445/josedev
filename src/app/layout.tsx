@@ -26,11 +26,21 @@ export const metadata: Metadata = {
   description:
     "IT Manager and web developer in Dubai. Websites that load fast, rank high and stay up — build, hosting, security and SEO, handled end to end.",
   metadataBase: new URL("https://joseviews.com"),
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Jose Sebastian — IT Manager & Web Developer in Dubai",
     description:
       "Websites that load fast, rank high and stay up. Dubai-based, 7+ years, build to hosting to SEO.",
     type: "website",
+    url: "/",
+    siteName: "Jose Sebastian",
+    locale: "en_AE",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Jose Sebastian — IT Manager & Web Developer in Dubai",
+    description:
+      "Websites that load fast, rank high and stay up. Dubai-based, 7+ years, build to hosting to SEO.",
   },
 };
 

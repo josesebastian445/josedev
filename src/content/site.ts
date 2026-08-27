@@ -9,9 +9,9 @@ export const SITE = {
   location: "Dubai, United Arab Emirates",
   locationShort: "Dubai, UAE",
   email: "hi@joseviews.com",
-  phone: "+971 58 920 2967",
+  phone: "+971 58 242 8109",
   /** wa.me needs the number bare: no +, spaces or dashes */
-  whatsapp: "https://wa.me/971589202967",
+  whatsapp: "https://wa.me/971582428109",
   years: "7+",
   timezone: "Asia/Dubai",
   replyTime: "Within a few hours",

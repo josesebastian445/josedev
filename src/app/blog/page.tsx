@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Writing — Jose Sebastian",
   description:
     "Notes from the work: technical SEO, WordPress and Next.js, and practical security for small offices in Dubai.",
+  alternates: { canonical: "/blog" },
 };
 
 export default function BlogPage() {

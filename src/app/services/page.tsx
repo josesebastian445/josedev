@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Services & pricing — Jose Sebastian",
   description:
     "Website design and development, SEO, IT support and web security. Fixed prices in AED, agreed before work starts.",
+  alternates: { canonical: "/services" },
 };
 
 export default function ServicesPage() {
