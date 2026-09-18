@@ -28,6 +28,7 @@ import {
 } from "./cms-types";
 
 const CMS_URL = process.env.PAYLOAD_URL?.replace(/\/$/, "");
+const API_KEY = process.env.PAYLOAD_API_KEY;
 const TENANT = process.env.PAYLOAD_TENANT_SLUG ?? "joseviews";
 
 /** Backstop only; the CMS pushes tag invalidations on publish. */
@@ -112,6 +113,17 @@ function fallbackPosts(): Post[] {
 }
 
 async function fetchPosts(): Promise<Post[]> {
+  // The CMS denies unauthenticated reads outright — `tenantRead` returns false
+  // when there is no user. Without a key the request succeeds with zero docs
+  // and the blog renders empty, which is exactly the silent failure this module
+  // exists to prevent, so refuse to start instead.
+  if (!API_KEY) {
+    throw new Error(
+      "PAYLOAD_URL is set but PAYLOAD_API_KEY is not. The CMS returns no " +
+        "documents to an anonymous caller, so this would silently empty the blog.",
+    );
+  }
+
   const url =
     `${CMS_URL}/api/posts` +
     `?where[tenant.slug][equals]=${encodeURIComponent(TENANT)}` +
@@ -119,10 +131,20 @@ async function fetchPosts(): Promise<Post[]> {
     `&depth=1&limit=500&sort=-publishedAt`;
 
   const res = await fetch(url, {
+    // The api-key strategy resolves to a real user, and that user's single
+    // tenant membership is what scopes the query — the tenant filter above is
+    // belt and braces, not the mechanism.
+    headers: { Authorization: `users API-Key ${API_KEY}` },
     next: { tags: [POSTS_TAG], revalidate: REVALIDATE_SECONDS },
   });
   if (!res.ok) {
-    throw new Error(`Payload returned ${res.status} ${res.statusText} for ${url}`);
+    const hint =
+      res.status === 401 || res.status === 403
+        ? " — check PAYLOAD_API_KEY, and that its user is a member of this tenant"
+        : "";
+    throw new Error(
+      `Payload returned ${res.status} ${res.statusText} for ${url}${hint}`,
+    );
   }
 
   const json = (await res.json()) as { docs?: CmsPost[] };

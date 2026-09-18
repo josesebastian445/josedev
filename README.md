@@ -71,7 +71,10 @@ Posts work differently since the CMS landed. See below.
 ## Blog content
 
 Posts come from the multi-tenant Payload instance when `PAYLOAD_URL` is set, and
-from `src/content/posts.ts` when it is not. Both paths render through the same
+from `src/content/posts.ts` when it is not. The CMS denies unauthenticated
+reads, so `PAYLOAD_API_KEY` — a service user whose single tenant membership
+scopes the query — is required alongside it. Without the key the request would
+succeed with zero documents, so the build refuses to start instead. Both paths render through the same
 blocks, because `lib/legacy-to-cms.ts` converts the committed posts into the
 CMS's own vocabulary — one function serving as both the offline fallback and the
 migration payload, so the two cannot drift.
