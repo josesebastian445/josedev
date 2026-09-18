@@ -14,16 +14,17 @@ npm run build && npm start
 | Route | What it is |
 |---|---|
 | `/` | Showcase home — WebGL hero, pinned horizontal gallery, process, stats, testimonials |
-| `/work` | Grid of all six projects |
+| `/work` | Grid of all projects |
 | `/work/[slug]` | Case study: brief, approach, outcome, results, client quote, next-project link |
 | `/services` | Capabilities, pricing tiers, process, FAQ |
 | `/blog` | Writing index |
-| `/blog/[slug]` | Article, rendered from typed content blocks |
+| `/blog/[slug]` | Article, rendered from CMS blocks |
 | `/contact` | Contact form with validation and success state |
+| `/api/revalidate` | Cache invalidation from the CMS — the only dynamic route |
 | `404` | Custom not-found |
 
-Everything prerenders: 32 static routes, including a generated OpenGraph image
-per project and per article.
+Everything else prerenders: 42 static routes, including a generated OpenGraph
+image per project and per article.
 
 ## What moves, and how
 
@@ -57,13 +58,54 @@ src/
   components/   sections, chrome (nav, cursor, progress), form, cards
   three/        HeroScene, KnotScene, LatticeScene
   content/      projects.ts, posts.ts  ← edit these, not the components
-  lib/          scroll store, intro store, contact types, GLSL noise
+  lib/          posts data layer, Lexical renderer, scroll and intro stores
 scripts/        puppeteer verification harness
 ```
 
-Content is typed data, deliberately separate from presentation. To add a project
-or post, append to `src/content/*.ts` — routes, static params, OG images and
+Projects and services are typed data, deliberately separate from presentation.
+To add one, append to `src/content/*.ts` — routes, static params, OG images and
 next/previous links all follow automatically.
+
+Posts work differently since the CMS landed. See below.
+
+## Blog content
+
+Posts come from the multi-tenant Payload instance when `PAYLOAD_URL` is set, and
+from `src/content/posts.ts` when it is not. Both paths render through the same
+blocks, because `lib/legacy-to-cms.ts` converts the committed posts into the
+CMS's own vocabulary — one function serving as both the offline fallback and the
+migration payload, so the two cannot drift.
+
+| File | Role |
+|---|---|
+| `lib/posts.ts` | Fetch, fallback, and the shape the components consume |
+| `lib/cms-types.ts` | The CMS `Post` and its blocks, mirrored locally |
+| `lib/lexical.tsx` | Renders Payload's serialised Lexical tree |
+| `components/CmsBlocks.tsx` | Renders the shared `pageBlocks` set |
+| `lib/legacy-to-cms.ts` | Committed posts → CMS blocks |
+
+The block list is shared across every tenant of that Payload instance, so
+`CmsBlocks` tolerates blocks it was not written for: `advisorCTA` and `form` are
+matched and skipped, unknown block types fall through to null, and unrecognised
+Lexical nodes render their text rather than throwing. **Adding a block to
+`pageBlocks` in the CMS means adding a case here too**, or it will save happily
+in the admin and render as nothing.
+
+`readingMinutes` is computed rather than stored — the CMS has no such field.
+Code and tables are discounted rather than counted as prose.
+
+### Revalidation
+
+Posts are cached under the tags `posts` and `post:<slug>`. The CMS clears them
+by POSTing to `/api/revalidate` on publish, rename and delete, authenticated
+with `REVALIDATE_SECRET` in an `x-revalidate-secret` header. The route fails
+closed: with the secret unset, every request 404s.
+
+> **Not live yet.** Tags need an incremental cache and `open-next.config.ts`
+> deliberately configures none, because every route was static. Wiring this up
+> means an R2 bucket or KV namespace, a binding in `wrangler.jsonc`, and the
+> cache configured in `open-next.config.ts`. Until then the site builds against
+> whatever the CMS returns at build time, and a publish needs a redeploy.
 
 ## Contact form
 
@@ -154,14 +196,21 @@ state — and checks that each OpenGraph route returns a PNG. Screenshots land i
 `scripts/probe.mjs` reads computed styles for cases where a screenshot shows
 that something is wrong but not why.
 
+> **The harness routes are stale.** `ROUTES` in `verify.mjs` still lists
+> `/work/nomad-atlas` and `/blog/unlayered-css-beats-tailwind-utilities`, neither
+> of which exists in `content/` any more, so it reports two 404s that are not
+> real. Point them at current slugs before trusting a run.
+
 ## Still placeholder
 
 - Project artwork is CSS gradients with mock browser chrome — swap in real
   screenshots or short video loops.
 - Read.cv, X and LinkedIn in `components/Footer.tsx` and the cal.com link on
   `/contact` are still `href="#"`. GitHub is wired.
-- Copy, project details, testimonials, stats, prices and the Lisbon location are
-  invented. So is `hello@josesebastian.dev`.
+- Prices in `content/services.ts` and the figures in the pricing article are
+  indicative. Confirm them before quoting from either.
+- Contact details are real and live in `content/site.ts` — Dubai, `hi@joseviews.com`,
+  the `+971` number. Earlier drafts of this file said otherwise.
 
 ## Notes
 
