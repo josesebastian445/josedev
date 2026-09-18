@@ -6,7 +6,7 @@ import Process from "@/components/Process";
 import About from "@/components/About";
 import Writing from "@/components/Writing";
 import Contact from "@/components/Contact";
-import { getPosts } from "@/lib/posts";
+import { getPostSummaries } from "@/lib/posts";
 
 /**
  * Order follows the numbered sections in the copy:
@@ -15,7 +15,7 @@ import { getPosts } from "@/lib/posts";
  * testimonials section — there are no real client quotes to put in it.
  */
 export default async function Home() {
-  const recent = (await getPosts()).slice(0, 3);
+  const recent = (await getPostSummaries()).slice(0, 3);
 
   return (
     <main>

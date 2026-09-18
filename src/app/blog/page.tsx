@@ -4,7 +4,7 @@ import PageHero from "@/components/PageHero";
 import CTABand from "@/components/CTABand";
 import { Stagger } from "@/components/motion-primitives";
 import PostRow from "@/components/PostRow";
-import { getPosts } from "@/lib/posts";
+import { getPostSummaries } from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "Writing — Jose Sebastian",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const sorted = await getPosts();
+  const sorted = await getPostSummaries();
 
   return (
     <main>

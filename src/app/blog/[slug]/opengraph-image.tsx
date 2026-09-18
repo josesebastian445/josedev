@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { formatDate } from "@/content/posts";
+import { formatDate } from "@/lib/format";
 import { getPost, getPosts } from "@/lib/posts";
 
 export const alt = "Article by Jose Sebastian";

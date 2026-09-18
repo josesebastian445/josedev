@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { formatDate, type Post } from "@/content/posts";
+import { formatDate } from "@/lib/format";
+import type { PostSummary } from "@/lib/cms-types";
 import { staggerItem } from "./motion-primitives";
 
-export default function PostRow({ post }: { post: Post }) {
+export default function PostRow({ post }: { post: PostSummary }) {
   return (
     <motion.div variants={staggerItem}>
       <Link

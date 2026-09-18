@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Reveal, SectionLabel, Stagger } from "./motion-primitives";
 import PostRow from "./PostRow";
-import { type Post } from "@/content/posts";
+import type { PostSummary } from "@/lib/cms-types";
 
 /**
  * The three most recent posts on the home page. Reuses PostRow so the /blog
@@ -13,7 +13,7 @@ import { type Post } from "@/content/posts";
  * component, and the data layer is async once it reads from the CMS. The home
  * page (a server component) does the fetching and slices to three.
  */
-export default function Writing({ posts }: { posts: Post[] }) {
+export default function Writing({ posts }: { posts: PostSummary[] }) {
   if (posts.length === 0) return null;
 
   return (

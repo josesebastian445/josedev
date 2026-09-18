@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import CTABand from "@/components/CTABand";
-import { Reveal } from "@/components/motion-primitives";
-import { formatDate, type Block } from "@/content/posts";
+import CmsBlocks from "@/components/CmsBlocks";
+import { formatDate } from "@/lib/format";
 import { getPost, getPosts } from "@/lib/posts";
 
 export async function generateStaticParams() {
@@ -33,117 +33,6 @@ export async function generateMetadata({
   };
 }
 
-function Blocks({ blocks }: { blocks: Block[] }) {
-  return (
-    <>
-      {blocks.map((b, i) => {
-        switch (b.type) {
-          case "h2":
-            return (
-              <Reveal key={i}>
-                <h2 className="mb-5 mt-16 font-display text-2xl font-bold tracking-tight md:text-3xl">
-                  {b.text}
-                </h2>
-              </Reveal>
-            );
-          case "p":
-            return (
-              <Reveal key={i}>
-                <p className="mb-6 text-lg leading-[1.75] text-fog">{b.text}</p>
-              </Reveal>
-            );
-          case "ul":
-            return (
-              <Reveal key={i}>
-                <ul className="mb-8 space-y-3.5">
-                  {b.items.map((item) => (
-                    <li key={item} className="flex gap-4 leading-relaxed text-fog">
-                      <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rotate-45 bg-volt" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            );
-          case "quote":
-            return (
-              <Reveal key={i}>
-                <blockquote className="my-10 border-l-2 border-volt py-2 pl-7 font-display text-xl leading-relaxed text-bone md:text-2xl">
-                  {b.text}
-                </blockquote>
-              </Reveal>
-            );
-          case "code":
-            return (
-              <Reveal key={i}>
-                <div className="mb-8 overflow-hidden rounded-xl border border-line bg-ink-2/70">
-                  <div className="flex items-center justify-between border-b border-line px-5 py-3">
-                    <span className="font-display text-[11px] uppercase tracking-[0.2em] text-fog">
-                      {b.lang}
-                    </span>
-                    <span className="flex gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-line" />
-                      <span className="h-2 w-2 rounded-full bg-line" />
-                      <span className="h-2 w-2 rounded-full bg-line" />
-                    </span>
-                  </div>
-                  <pre className="overflow-x-auto p-5 text-sm leading-relaxed">
-                    <code className="font-mono text-bone/90">{b.code}</code>
-                  </pre>
-                </div>
-              </Reveal>
-            );
-          case "table":
-            return (
-              <Reveal key={i}>
-                {/* the wrapper scrolls, not the page — a 3-column table at
-                    760px is tight on a phone */}
-                <div className="mb-10 overflow-x-auto rounded-xl border border-line">
-                  <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
-                    <thead>
-                      <tr className="border-b border-line">
-                        {b.head.map((h) => (
-                          <th
-                            key={h}
-                            scope="col"
-                            className="px-5 py-4 font-display text-[11px] uppercase tracking-[0.18em] text-fog"
-                          >
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {b.rows.map((row) => (
-                        <tr
-                          key={row[0]}
-                          className="border-b border-line last:border-b-0"
-                        >
-                          {row.map((cell, c) => (
-                            <td
-                              key={c}
-                              className={`px-5 py-4 align-top leading-relaxed ${
-                                c === 0
-                                  ? "font-display font-medium text-bone"
-                                  : "text-fog"
-                              }`}
-                            >
-                              {cell}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Reveal>
-            );
-        }
-      })}
-    </>
-  );
-}
-
 export default async function PostPage({
   params,
 }: {
@@ -170,13 +59,13 @@ export default async function PostPage({
           { label: "Published", value: formatDate(post.date) },
           { label: "Topic", value: post.tag },
           { label: "Reading time", value: `${post.readingMinutes} minutes` },
-          { label: "Author", value: "Jose Sebastian" },
+          { label: "Author", value: post.author ?? "Jose Sebastian" },
         ]}
       />
 
       <article className="py-20 md:py-28">
         <div className="mx-auto max-w-[760px] px-6">
-          <Blocks blocks={post.body} />
+          <CmsBlocks blocks={post.layout} />
         </div>
       </article>
 
