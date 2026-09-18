@@ -4,10 +4,11 @@ import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import CTABand from "@/components/CTABand";
 import { Reveal } from "@/components/motion-primitives";
-import { POSTS, getPost, formatDate, type Block } from "@/content/posts";
+import { formatDate, type Block } from "@/content/posts";
+import { getPost, getPosts } from "@/lib/posts";
 
-export function generateStaticParams() {
-  return POSTS.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  return (await getPosts()).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -16,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPost(slug);
   if (!post) return { title: "Not found" };
 
   return {
@@ -149,10 +150,11 @@ export default async function PostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPost(slug);
   if (!post) notFound();
 
-  const sorted = [...POSTS].sort((a, b) => b.date.localeCompare(a.date));
+  // getPosts already returns newest first
+  const sorted = await getPosts();
   const idx = sorted.findIndex((p) => p.slug === slug);
   const next = sorted[(idx + 1) % sorted.length];
 

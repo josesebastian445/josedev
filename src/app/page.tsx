@@ -6,6 +6,7 @@ import Process from "@/components/Process";
 import About from "@/components/About";
 import Writing from "@/components/Writing";
 import Contact from "@/components/Contact";
+import { getPosts } from "@/lib/posts";
 
 /**
  * Order follows the numbered sections in the copy:
@@ -13,7 +14,9 @@ import Contact from "@/components/Contact";
  * with · 05 Writing. The stat block now lives in the hero, and there is no
  * testimonials section — there are no real client quotes to put in it.
  */
-export default function Home() {
+export default async function Home() {
+  const recent = (await getPosts()).slice(0, 3);
+
   return (
     <main>
       <Hero />
@@ -22,7 +25,7 @@ export default function Home() {
       <Work />
       <Process />
       <About />
-      <Writing />
+      <Writing posts={recent} />
       <Contact />
     </main>
   );

@@ -3,15 +3,18 @@
 import Link from "next/link";
 import { Reveal, SectionLabel, Stagger } from "./motion-primitives";
 import PostRow from "./PostRow";
-import { POSTS } from "@/content/posts";
+import { type Post } from "@/content/posts";
 
 /**
  * The three most recent posts on the home page. Reuses PostRow so the /blog
  * index and this section can never drift apart visually.
+ *
+ * Posts arrive as a prop rather than being imported: this is a client
+ * component, and the data layer is async once it reads from the CMS. The home
+ * page (a server component) does the fetching and slices to three.
  */
-export default function Writing() {
-  const recent = POSTS.slice(0, 3);
-  if (recent.length === 0) return null;
+export default function Writing({ posts }: { posts: Post[] }) {
+  if (posts.length === 0) return null;
 
   return (
     <section id="writing" className="relative py-32 md:py-44">
@@ -53,7 +56,7 @@ export default function Writing() {
 
         <Reveal>
           <Stagger className="border-t border-line" gap={0.07}>
-            {recent.map((p) => (
+            {posts.map((p) => (
               <PostRow key={p.slug} post={p} />
             ))}
           </Stagger>

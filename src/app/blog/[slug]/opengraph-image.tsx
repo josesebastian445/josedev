@@ -1,12 +1,13 @@
 import { ImageResponse } from "next/og";
-import { getPost, formatDate, POSTS } from "@/content/posts";
+import { formatDate } from "@/content/posts";
+import { getPost, getPosts } from "@/lib/posts";
 
 export const alt = "Article by Jose Sebastian";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export function generateStaticParams() {
-  return POSTS.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  return (await getPosts()).map((p) => ({ slug: p.slug }));
 }
 
 export default async function Image({
@@ -15,7 +16,7 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPost(slug);
 
   return new ImageResponse(
     (

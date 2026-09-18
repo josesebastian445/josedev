@@ -4,7 +4,7 @@ import PageHero from "@/components/PageHero";
 import CTABand from "@/components/CTABand";
 import { Stagger } from "@/components/motion-primitives";
 import PostRow from "@/components/PostRow";
-import { POSTS } from "@/content/posts";
+import { getPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "Writing — Jose Sebastian",
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-export default function BlogPage() {
-  const sorted = [...POSTS].sort((a, b) => b.date.localeCompare(a.date));
+export default async function BlogPage() {
+  const sorted = await getPosts();
 
   return (
     <main>
