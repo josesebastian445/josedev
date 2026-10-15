@@ -63,7 +63,7 @@ export default async function PostPage({
         ]}
       />
 
-      <article className="py-20 md:py-28">
+      <article className="article-motion py-20 md:py-28">
         <div className="mx-auto max-w-[760px] px-6">
           <CmsBlocks blocks={post.layout} />
         </div>
@@ -73,7 +73,7 @@ export default async function PostPage({
         <Link
           href={`/blog/${next.slug}`}
           data-cursor="link"
-          className="group block py-16 transition-colors duration-500 hover:bg-ink-2/40 md:py-24"
+          className="read-next-hover group block py-16 transition-colors duration-500 hover:bg-ink-2/40 md:py-24"
         >
           <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-8 px-6 md:px-10">
             <div className="max-w-2xl">

@@ -1,3 +1,5 @@
+import { ADDITIONAL_POSTS } from "./additional-posts";
+
 /**
  * Blog content as typed data. Rendering blocks rather than MDX keeps the
  * dependency surface at zero; swap in @next/mdx later if posts need JSX.
@@ -24,6 +26,7 @@ export type Post = {
 };
 
 export const POSTS: Post[] = [
+  ...ADDITIONAL_POSTS,
   {
     slug: "why-website-not-showing-on-google",
     title: "Why your website is not showing up on Google",

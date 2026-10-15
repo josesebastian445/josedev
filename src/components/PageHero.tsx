@@ -23,7 +23,7 @@ export default function PageHero({
   const ready = useIntroDone();
 
   return (
-    <header className="relative overflow-hidden border-b border-line pb-16 pt-40 md:pb-24 md:pt-48">
+    <header className="page-hero relative overflow-hidden border-b border-line pb-16 pt-40 md:pb-24 md:pt-48">
       {/* soft ambient wash, no WebGL cost on inner pages */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-glow-page-a" />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-glow-page-b" />

@@ -203,3 +203,112 @@ html.lenis body {
   }
   .grain::after { animation: none; }
 }
+
+
+/* Portfolio: generous editorial type paired with a technical blueprint. */
+.portfolio-hero { isolation: isolate; }
+.hero-blueprint { position: absolute; top: 0; right: 40px; width: 34%; padding: 26px; border: 1px solid var(--color-line); border-radius: 22px; background: color-mix(in srgb, var(--color-ink-2) 94%, transparent); backdrop-filter: blur(18px); box-shadow: 0 28px 90px rgb(0 0 0 / .14); }
+.blueprint-top,.blueprint-bottom { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 8px; letter-spacing: .12em; color: var(--color-fog); }
+.blueprint-top > span:last-child { margin-left: auto; }
+.blueprint-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-volt); }
+.blueprint-title { margin-top: 24px; font-family: var(--font-display); font-size: clamp(22px,2.4vw,34px); line-height: 1.12; letter-spacing: -.045em; }
+.blueprint-orbit { position: relative; display: grid; place-items: center; height: 150px; margin: 12px 0; background: radial-gradient(ellipse at center, rgb(200 255 46 / .06), transparent 65%); }
+.blueprint-orbit::before,.blueprint-orbit::after,.blueprint-orbit > div { content: ''; position: absolute; width: 140px; height: 100px; border: 1px solid var(--color-line); border-radius: 50%; transform: rotate(-35deg); }
+.blueprint-orbit::after { transform: rotate(35deg); }
+.blueprint-orbit > div { transform: rotate(90deg); }
+.blueprint-orbit > span { font-family: var(--font-display); font-size: 72px; font-weight: 600; letter-spacing: -.1em; line-height: 1; transform: translateY(-7px); }
+.blueprint-orbit i,.blueprint-orbit b { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--color-volt); top: 36px; left: calc(50% - 52px); box-shadow: 0 0 20px rgb(200 255 46 / .35); }
+.blueprint-orbit b { width: 4px; height: 4px; top: 112px; left: calc(50% + 50px); background: var(--color-fog); }
+.blueprint-services > div { display: flex; align-items: center; gap: 14px; padding: 13px 0; border-top: 1px solid var(--color-line); }
+.blueprint-services > div > span { font-family: var(--font-display); color: var(--color-fog); font-size: 10px; }
+.blueprint-services > div > span:last-child { margin-left: auto; color: var(--color-accent); font-size: 15px; }
+.blueprint-services strong { font-weight: 500; font-size: 12px; }
+.blueprint-services p { margin-top: 3px; color: var(--color-fog); font-size: 10px; line-height: 1.5; }
+.blueprint-bottom { justify-content: space-between; padding-top: 16px; margin-top: 6px; border-top: 1px solid var(--color-line); font-size: 7px; }
+#work { background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--color-ink-2) 60%, transparent), transparent); }
+#work a.group { box-shadow: 0 16px 48px rgb(0 0 0 / .06); }
+#work a.group:hover { border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-line)); }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; }
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .hero-blueprint { width: 35%; padding: 22px; }
+  .hero-copy h1 { font-size: 5.7vw; }
+  .blueprint-orbit { height: 130px; }
+}
+@media (max-width: 1023px) {
+  .hero-blueprint { position: relative; top: auto; right: auto; width: 100%; margin-top: 40px; padding: 24px; }
+  .blueprint-title { font-size: 30px; }
+  .blueprint-orbit { position: absolute; right: 24px; top: 26px; width: 140px; height: 115px; margin: 0; }
+  .blueprint-services { margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+  .blueprint-services > div { align-items: flex-start; }
+}
+@media (max-width: 480px) {
+  .blueprint-top { font-size: 7px; letter-spacing: .07em; }
+  .blueprint-title { font-size: 26px; }
+  .blueprint-orbit { right: 8px; top: 36px; transform: scale(.72); transform-origin: right center; }
+  .blueprint-services { grid-template-columns: 1fr; }
+  .portfolio-hero .hero-copy h1 { font-size: clamp(2.55rem,10.7vw,3.2rem); }
+}
+.hero-grid { background-image: linear-gradient(var(--color-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-line) 1px, transparent 1px); background-size: 80px 80px; opacity: .22; mask-image: linear-gradient(110deg, transparent 15%, black 100%); }
+@media (min-width: 1024px) {
+  .blueprint-orbit { height: 112px; margin: 8px 0; }
+  .blueprint-orbit::before,.blueprint-orbit::after,.blueprint-orbit > div { width: 112px; height: 78px; }
+  .blueprint-orbit i { top: 22px; left: calc(50% - 42px); }
+  .blueprint-orbit b { top: 90px; left: calc(50% + 40px); }
+  .blueprint-services > div { padding: 11px 0; }
+}
+
+/* Small interaction cues; transforms run only for precise pointers. */
+html.theme-ready .post-hover,
+html.theme-ready .work-hover,
+html.theme-ready .hero-copy a,
+html.theme-ready .blueprint-services > div,
+html.theme-ready .page-hero dl > div,
+html.theme-ready .read-next-hover svg,
+html.theme-ready .post-hover svg,
+html.theme-ready .work-hover svg {
+  transition: translate 320ms var(--ease-out-expo), transform 320ms var(--ease-out-expo), box-shadow 320ms ease, background-color 220ms ease, border-color 220ms ease, color 220ms ease;
+}
+.blueprint-services > div { border-radius: 7px; }
+.page-hero dl > div { position: relative; }
+.page-hero dl > div::before { content: ''; position: absolute; left: -12px; top: 0; bottom: 0; width: 2px; border-radius: 2px; background: var(--color-volt); transform: scaleY(0); transform-origin: bottom; transition: transform 280ms var(--ease-out-expo); }
+.article-motion { animation: article-arrive 650ms var(--ease-out-expo) both; }
+.article-motion a { text-decoration-thickness: 1px; text-underline-offset: 4px; background-image: linear-gradient(var(--color-volt),var(--color-volt)); background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 2px; }
+html.theme-ready .article-motion a { transition: background-size 280ms ease, color 220ms ease; }
+.article-motion a:is(:hover,:focus-visible) { background-size: 100% 2px; color: var(--color-accent); }
+.post-hover:focus-visible,.work-hover:focus-visible { outline-offset: 6px; }
+.hero-copy a:active { scale: .98; }
+@keyframes article-arrive { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+@keyframes blueprint-turn { from { transform: rotate(90deg); } to { transform: rotate(450deg); } }
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  .hero-copy a:hover { translate: 0 -3px; box-shadow: 0 8px 24px rgb(0 0 0 / .1); }
+  .hero-copy a:hover svg { transform: translateX(3px); }
+  .hero-blueprint:hover .blueprint-orbit > div { animation: blueprint-turn 18s linear infinite; }
+  .blueprint-services > div:hover { translate: 3px 0; background: color-mix(in srgb,var(--color-volt) 5%,transparent); }
+  .work-hover:hover { translate: 0 -5px; box-shadow: 0 24px 60px rgb(0 0 0 / .14); }
+  .work-hover:hover svg { transform: translate(2px,-2px); }
+  .post-hover:hover { translate: 4px 0; }
+  .post-hover:hover svg,.read-next-hover:hover svg { transform: translateX(4px); }
+  .page-hero dl > div:hover { translate: 0 -3px; }
+  .page-hero dl > div:hover::before { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .article-motion { animation: none; }
+  .hero-copy a:active { scale: none; }
+  .page-hero dl > div::before { transition: none; }
+}
+
+/* Delayed invitation stays compact and leaves the page interactive. */
+.timed-cta { position: fixed; z-index: 45; right: 24px; bottom: 24px; width: 330px; max-width: calc(100vw - 32px); max-height: calc(100dvh - 100px); overflow-y: auto; padding: 28px; border: 1px solid var(--color-line); border-top: 2px solid var(--color-volt); border-radius: 20px; background: var(--color-ink-2); color: var(--color-bone); box-shadow: 0 16px 60px rgb(0 0 0 / .2); }
+.timed-cta-close { position: absolute; right: 12px; top: 12px; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--color-line); border-radius: 50%; color: var(--color-fog); cursor: pointer; }
+.timed-cta-close:hover { background: var(--color-surface); color: var(--color-bone); }
+.timed-cta-eyebrow { display: flex; align-items: center; gap: 7px; margin: 6px 16px 22px 0; font-family: var(--font-display); font-size: 9px; letter-spacing: .15em; color: var(--color-fog); }
+.timed-cta-eyebrow > span { width: 5px; height: 5px; border-radius: 50%; background: var(--color-volt); }
+.timed-cta h2 { font-family: var(--font-display); font-size: 34px; font-weight: 600; line-height: 1.05; letter-spacing: -.045em; }
+.timed-cta h2 > span { color: var(--color-accent); }
+.timed-cta > p { margin-top: 16px; font-size: 13px; line-height: 1.75; color: var(--color-fog); }
+.timed-cta-button { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; border-radius: 10px; padding: 13px 16px; font-family: var(--font-display); font-size: 13px; font-weight: 600; background: var(--color-volt); color: var(--color-on-accent); }
+.timed-cta-button > span { font-size: 18px; transition: transform 200ms ease; }
+.timed-cta-button:hover > span { transform: translate(2px,-2px); }
+.timed-cta-note { display: flex; justify-content: center; gap: 8px; margin-top: 14px; font-size: 10px; color: var(--color-fog); }
+@media (max-width: 480px) { .timed-cta { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); padding: 24px; } .timed-cta h2 { font-size: 30px; } }
+@media (prefers-reduced-motion: reduce) { .timed-cta-button:hover > span { transform: none; } }

@@ -12,7 +12,7 @@ export default function PostRow({ post }: { post: PostSummary }) {
       <Link
         href={`/blog/${post.slug}`}
         data-cursor="link"
-        className="group relative block border-b border-line py-10 md:py-12"
+        className="post-hover group relative isolate block border-b border-line py-10 md:py-12"
       >
         {/* wipe that fills from the left on hover */}
         <span className="absolute inset-x-[-1.5rem] inset-y-0 -z-10 origin-left scale-x-0 rounded-xl bg-ink-2/70 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />

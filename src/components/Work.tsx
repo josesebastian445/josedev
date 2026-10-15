@@ -18,7 +18,7 @@ function Row({ project, index }: { project: Project; index: number }) {
       <Link
         href={`/work/${project.slug}`}
         data-cursor="link"
-        className="group grid overflow-hidden rounded-3xl border border-line bg-ink-2 transition-colors duration-500 hover:border-fog/30 lg:grid-cols-2"
+        className="work-hover group grid overflow-hidden rounded-3xl border border-line bg-ink-2 transition-colors duration-500 hover:border-fog/30 lg:grid-cols-2"
       >
         <div
           className={`relative aspect-[16/11] overflow-hidden lg:aspect-auto lg:min-h-[26rem] ${

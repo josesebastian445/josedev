@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
@@ -9,8 +8,6 @@ import { useIntroDone } from "@/lib/intro";
 import LocalTime from "./LocalTime";
 import Typewriter from "./Typewriter";
 import { SITE } from "@/content/site";
-
-const HeroScene = dynamic(() => import("@/three/HeroScene"), { ssr: false });
 
 const STATS = [
   { v: "7+", k: "Years experience" },
@@ -38,12 +35,9 @@ export default function Hero() {
     <section
       ref={ref}
       id="top"
-      className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pb-16 pt-32 md:pb-20"
+      className="portfolio-hero relative flex min-h-[100svh] flex-col justify-center overflow-hidden pb-16 pt-32 md:pb-20"
     >
-      {/* WebGL layer */}
-      <div className="absolute inset-0 -z-10">
-        <HeroScene />
-      </div>
+      <div className="hero-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
 
       {/* atmosphere. The flat scrim only applies on small screens, where the
           type unavoidably sits on top of the geometry. */}
@@ -53,7 +47,7 @@ export default function Hero() {
 
       <motion.div
         style={{ y, opacity, filter: blur }}
-        className="mx-auto w-full max-w-[1400px] px-6 md:px-10"
+        className="relative mx-auto w-full max-w-[1400px] px-6 md:px-10"
       >
         {/* terminal line — the identity, stated the way a developer would */}
         <motion.div
@@ -84,17 +78,17 @@ export default function Hero() {
         {/* The WebGL blob is biased to the right of the viewport, so the copy
             column is capped short of it. Without this the headline and the
             buttons sit on top of the geometry and go muddy. */}
-        <div className="lg:max-w-[62%] xl:max-w-[58%]">
+        <div className="hero-copy lg:max-w-[58%]">
           {/* sized so "Websites that load fast," holds on one line inside the
               capped column — at 5.2vw it broke after "load" */}
-          <h1 className="font-display text-[clamp(2.2rem,4.5vw,4rem)] font-bold leading-[1.02] tracking-[-0.035em]">
+          <div className="mb-5 font-display text-[11px] uppercase tracking-[0.24em] text-fog">Independent developer & IT manager · Dubai</div>
+          <h1 className="font-display text-[clamp(3rem,6.3vw,6rem)] font-bold leading-[0.98] tracking-[-0.055em]">
             <span className="block">
-              <SplitText text="Websites that load fast," active={ready} />
+              <SplitText text="Built to perform." active={ready} stagger={0.015} />
             </span>
             <span className="block">
-              <SplitText text="rank high" delay={0.2} active={ready} />{" "}
-              <span className="text-fog">
-                <SplitText text="and stay up." delay={0.32} active={ready} />
+              <span className="text-accent">
+                <SplitText text="Made to last." delay={0.2} active={ready} stagger={0.015} />
               </span>
             </span>
           </h1>
@@ -105,10 +99,9 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="mt-8 max-w-xl text-balance text-lg leading-relaxed text-fog"
           >
-            I&rsquo;m Jose — an IT Manager and web developer in Dubai. For seven
-            years I&rsquo;ve built and maintained business websites end to end:
-            the build, the hosting, the security, and the SEO that actually
-            brings in enquiries.
+            I&rsquo;m Jose. I build fast, thoughtful websites and handle the
+            hosting, security, and SEO behind them. One person, from the first
+            idea to everything that comes after launch.
           </motion.p>
 
           {/* the second terminal line from the copy: > working in … */}
@@ -135,7 +128,7 @@ export default function Hero() {
             <Link
               href="/contact"
               data-cursor="link"
-              className="group relative overflow-hidden rounded-full bg-bone px-8 py-4 font-display font-semibold text-ink transition-colors duration-500 group-hover:text-on-accent"
+              className="group relative overflow-hidden rounded-full bg-volt px-8 py-4 font-display font-semibold text-on-accent transition-colors duration-500"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Start a project
@@ -167,6 +160,16 @@ export default function Hero() {
             </Link>
           </motion.div>
         </div>
+
+        <motion.aside initial={{ opacity: 0, y: 24 }} animate={ready ? { opacity: 1, y: 0 } : undefined} transition={{ duration: 1, delay: 0.5 }} className="hero-blueprint" aria-label="My approach to building websites">
+          <div className="blueprint-top"><span className="blueprint-dot" /> FROM IDEA TO INFRASTRUCTURE <span>01—04</span></div>
+          <div className="blueprint-title">Good design.<br />Solid foundations.</div>
+          <div className="blueprint-orbit" aria-hidden="true"><div /><span>j<span className="text-accent">.</span></span><i /><b /></div>
+          <div className="blueprint-services">
+            {[['01', 'Design & development', 'Thoughtful interfaces. Fast experiences.'], ['02', 'Hosting & security', 'A dependable home for your business.'], ['03', 'Search & performance', 'Built to be found. Optimized to load.'], ['04', 'Ongoing care', 'Support that continues after launch.']].map(([number, title, detail]) => <div key={number}><span>{number}</span><div><strong>{title}</strong><p>{detail}</p></div><span aria-hidden="true">↗</span></div>)}
+          </div>
+          <div className="blueprint-bottom"><span>DUBAI, UAE</span><span>DESIGNED TO WORK.</span></div>
+        </motion.aside>
 
         {/* the numbers, the availability and the stack — the things a prospect
             checks before they read anything else */}

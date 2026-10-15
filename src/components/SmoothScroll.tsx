@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { MotionConfig } from "motion/react";
 
 export default function SmoothScroll({
   children,
@@ -46,5 +47,5 @@ export default function SmoothScroll({
     };
   }, []);
 
-  return <>{children}</>;
+  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
 }

@@ -17,6 +17,7 @@
  * Client components import types from `lib/cms-types` instead.
  */
 import { POSTS as LEGACY_POSTS } from "@/content/posts";
+import { ADDITIONAL_POSTS } from "@/content/additional-posts";
 import { legacyPostToCms } from "./legacy-to-cms";
 import { lexicalToText } from "./lexical";
 import {
@@ -152,7 +153,19 @@ async function fetchPosts(): Promise<Post[]> {
     throw new Error(`Payload response for tenant "${TENANT}" had no docs array`);
   }
 
-  return json.docs.map(toPost).sort(byNewest);
+  // Keep the new committed articles visible with or without a connected CMS.
+  // An editor's CMS version overrides the committed article with that slug.
+  const posts = new Map(
+    ADDITIONAL_POSTS.map((post) => {
+      const converted = toPost(legacyPostToCms(post));
+      return [converted.slug, converted] as const;
+    }),
+  );
+  for (const raw of json.docs) {
+    const post = toPost(raw);
+    posts.set(post.slug, post);
+  }
+  return [...posts.values()].sort(byNewest);
 }
 
 let inflight: Promise<Post[]> | null = null;
