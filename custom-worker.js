@@ -21,9 +21,10 @@ export {
 const SEND_PATH = "/__internal/contact-email";
 
 /**
- * Applied to every response. The CSP can be this strict because the site
- * loads nothing cross-origin: fonts are self-hosted by next/font, there is
- * no analytics, and the three.js scenes are fully procedural. script-src /
+ * Applied to every response. The site loads very little cross-origin: fonts
+ * are self-hosted by next/font and the three.js scenes are fully procedural.
+ * The exceptions are Cloudflare Web Analytics and Google Analytics 4, both of
+ * which need explicit entries below or they fail silently. script-src /
  * style-src need 'unsafe-inline' for Next's RSC payload scripts, the theme
  * boot script and motion/react's style attributes.
  */
@@ -35,13 +36,23 @@ const SECURITY_HEADERS = {
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
   "Content-Security-Policy": [
     "default-src 'self'",
-    // cloudflareinsights: the Web Analytics beacon Cloudflare injects at the
-    // edge — invisible to a repo scan, blocked without these two entries
-    "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
+    // Two analytics platforms, each needing entries in more than one
+    // directive. cloudflareinsights is the Web Analytics beacon Cloudflare
+    // injects at the edge — invisible to a repo scan. googletagmanager serves
+    // gtag.js; GA4 then beacons to google-analytics.com and to a regional
+    // subdomain of it, hence wildcards rather than hosts.
+    //
+    // www.google.com is the one that is easy to miss. GA4 sends a second
+    // /g/collect request there for Google signals, separate from the
+    // measurement hit. Without it the page still records, but every visitor
+    // gets a CSP error in the console and the signals data is dropped. If
+    // Google Ads is ever linked, *.g.doubleclick.net and
+    // www.googleadservices.com will need adding here too.
+    "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://*.googletagmanager.com",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data:",
+    "img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com https://www.google.com",
     "font-src 'self'",
-    "connect-src 'self' https://cloudflareinsights.com",
+    "connect-src 'self' https://cloudflareinsights.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://www.google.com",
     "object-src 'none'",
     "frame-ancestors 'none'",
     "base-uri 'self'",

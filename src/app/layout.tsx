@@ -8,6 +8,7 @@ import Cursor from "@/components/Cursor";
 import Preloader from "@/components/Preloader";
 import Footer from "@/components/Footer";
 import TimedCTA from "@/components/TimedCTA";
+import Analytics from "@/components/Analytics";
 import { THEME_BOOT_SCRIPT } from "@/lib/theme";
 
 const space = Space_Grotesk({
@@ -71,6 +72,7 @@ export default function RootLayout({
           <Footer />
           <TimedCTA />
         </SmoothScroll>
+        <Analytics />
       </body>
     </html>
   );
