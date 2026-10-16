@@ -63,6 +63,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
       <body className="grain antialiased">
+        <Analytics />
         <Preloader />
         <SmoothScroll>
           <ScrollProgress />
@@ -72,7 +73,6 @@ export default function RootLayout({
           <Footer />
           <TimedCTA />
         </SmoothScroll>
-        <Analytics />
       </body>
     </html>
   );

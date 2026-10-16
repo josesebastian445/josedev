@@ -42,6 +42,12 @@ const SECURITY_HEADERS = {
     // gtag.js; GA4 then beacons to google-analytics.com and to a regional
     // subdomain of it, hence wildcards rather than hosts.
     //
+    // GTM loads from the same googletagmanager host as gtag.js, so the
+    // script-src entry covers both; its noscript iframe needs frame-src.
+    // Tags added inside the container can need hosts nobody here has
+    // anticipated — a new tag that silently does nothing is a CSP problem
+    // before it is a GTM problem.
+    //
     // www.google.com is the one that is easy to miss. GA4 sends a second
     // /g/collect request there for Google signals, separate from the
     // measurement hit. Without it the page still records, but every visitor
@@ -53,6 +59,11 @@ const SECURITY_HEADERS = {
     "img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com https://www.google.com",
     "font-src 'self'",
     "connect-src 'self' https://cloudflareinsights.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://www.google.com",
+    // The GTM noscript iframe. frame-ancestors below governs who may frame
+    // this site; it says nothing about what this site may frame, and there is
+    // no frame-src, so without this the iframe falls back to default-src
+    // 'self' and is blocked for every visitor without JavaScript.
+    "frame-src https://www.googletagmanager.com",
     "object-src 'none'",
     "frame-ancestors 'none'",
     "base-uri 'self'",
