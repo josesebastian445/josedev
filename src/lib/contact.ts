@@ -8,8 +8,8 @@
 export type ContactState = {
   status: "idle" | "success" | "error";
   message?: string;
-  errors?: Partial<Record<"name" | "email" | "message", string>>;
-  values?: { name: string; email: string; budget: string; message: string };
+  errors?: Partial<Record<"name" | "email" | "message" | "service" | "details", string>>;
+  values?: { name: string; email: string; budget: string; message: string; service: string; details: string };
 };
 
 export const initialContactState: ContactState = { status: "idle" };

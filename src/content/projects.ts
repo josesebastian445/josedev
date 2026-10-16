@@ -19,15 +19,18 @@ export type Project = {
   brief: string;
   approach: string[];
   outcome: string;
+  changes: { area: string; before: string; contribution: string; after: string }[];
   quote?: { text: string; name: string; role: string };
   /** two-stop gradient standing in for artwork */
   art: [string, string];
   featured: boolean;
+  website?: string;
 };
 
 export const PROJECTS: Project[] = [
   {
     slug: "best-solution-services",
+    website: "https://www.best-solution.ae/",
     index: "01",
     title: "Best Solution Services",
     client: "Best Solution Services",
@@ -47,11 +50,11 @@ export const PROJECTS: Project[] = [
       "FortiGate",
       "Microsoft 365",
     ],
-    metric: "99.9%",
-    metricLabel: "uptime maintained",
+    metric: "End-to-end",
+    metricLabel: "development and ongoing care",
     results: [
       { value: "Multi-site", label: "estate consolidated" },
-      { value: "99.9%", label: "uptime maintained" },
+      { value: "Build + care", label: "development and operations" },
       { value: "2022 —", label: "still maintained today" },
     ],
     brief:
@@ -64,7 +67,12 @@ export const PROJECTS: Project[] = [
       "Automated the CRM handoff so enquiries from the sites land where the sales side actually works.",
     ],
     outcome:
-      "The estate now runs as one system with one person accountable for it, rather than a collection of sites nobody could see end to end. It has held 99.9% uptime, and I still maintain it — which is the part that matters: these are systems I keep running, not screenshots from a portfolio.",
+      "Hosting, DNS, site development, security and enquiry routing now sit within one managed workflow. My role covers both building the sites and maintaining the systems behind them, giving the business a single technical point of accountability.",
+    changes: [
+      { area: "Hosting & ownership", before: "Sites spread across hosts, stacks and separate admin accounts.", contribution: "Audited the estate and consolidated hosting and DNS behind Cloudflare.", after: "A shared operational setup with one accountable technical owner." },
+      { area: "Build decisions", before: "Different editing and application needs across the estate.", contribution: "Selected WordPress, Next.js or Astro to suit each site's requirements.", after: "Sites built around their content workflow and technical needs." },
+      { area: "Security & enquiries", before: "Security and SEO were handled reactively, with separate sales workflows.", contribution: "Included WAF rules, tested backups, crawl checks and CRM handoff in the delivery process.", after: "Protection, discovery and enquiry routing are part of ongoing site operations." },
+    ],
     art: ["#6b5bff", "#0b0d16"],
     featured: true,
   },
@@ -107,6 +115,11 @@ export const PROJECTS: Project[] = [
     ],
     outcome:
       "Two years of keeping stores online and findable while being the first line of support for the people running them. It is the engagement that taught me the two jobs are the same job: a store that is down does not rank, and a team that cannot log in does not sell.",
+    changes: [
+      { area: "Store maintenance", before: "A WordPress and WooCommerce portfolio needing continued updates and support.", contribution: "Staged core, theme and plugin changes before releasing them to live stores.", after: "A maintenance workflow that checks changes before production deployment." },
+      { area: "Search & hosting", before: "Search visibility, hosting and databases all needed technical ownership.", contribution: "Handled crawl audits, performance work, database administration and recovery checks.", after: "Search and infrastructure work handled together within the same engagement." },
+      { area: "Team support", before: "Local and international teams needed day-to-day technical help.", contribution: "Supported accounts, devices and Microsoft 365 alongside the web estate.", after: "One support role spanning the stores and the people operating them during 2019–2021." },
+    ],
     art: ["#c8ff2e", "#101408"],
     featured: true,
   },

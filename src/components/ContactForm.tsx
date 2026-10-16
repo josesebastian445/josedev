@@ -1,11 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { submitContact } from "@/app/actions";
 import { initialContactState } from "@/lib/contact";
 import { SITE, MAILTO } from "@/content/site";
+import { ENQUIRY_SERVICES, getEnquiryService } from "@/content/enquiries";
+import { trackEvent } from "@/lib/analytics";
 
 const BUDGETS = [
   "< AED 10k",
@@ -46,8 +48,23 @@ function Submit() {
 const fieldBase =
   "w-full rounded-xl border bg-ink-2/50 px-5 py-4 font-body text-bone outline-none transition-colors duration-300 placeholder:text-fog/60 focus:border-volt/60 focus:bg-ink-2";
 
-export default function ContactForm() {
+export default function ContactForm({ initialService = "" }: { initialService?: string }) {
   const [state, formAction] = useActionState(submitContact, initialContactState);
+  const [service, setService] = useState(getEnquiryService(initialService)?.slug ?? "");
+  const selectedService = getEnquiryService(service);
+  const started = useRef(false);
+  const submittedService = useRef(service);
+  const recordedState = useRef(state);
+  const viewed = useRef(false);
+  useEffect(() => {
+    if (!viewed.current) { viewed.current = true; trackEvent("contact_view", { service: initialService }); }
+  }, [initialService]);
+  useEffect(() => {
+    if (recordedState.current === state) return;
+    recordedState.current = state;
+    if (state.status === "success") trackEvent("generate_lead", { service: submittedService.current });
+    if (state.status === "error") trackEvent("enquiry_error", { service: state.values?.service ?? submittedService.current, outcome: state.errors ? "validation" : "delivery" });
+  }, [state, service]);
 
   if (state.status === "success") {
     return (
@@ -93,7 +110,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-6" onFocusCapture={() => { if (!started.current) { started.current = true; trackEvent("enquiry_start", { service }); } }} onSubmit={() => { submittedService.current = service; trackEvent("enquiry_submit", { service }); }}>
       {/* honeypot — hidden from people, irresistible to bots */}
       <div aria-hidden className="absolute left-[-9999px]">
         <label>
@@ -158,6 +175,16 @@ export default function ContactForm() {
         </div>
       </div>
 
+      <fieldset aria-describedby={state.errors?.service ? "service-error" : undefined}>
+        <legend className="mb-3 font-display text-[11px] uppercase tracking-[0.22em] text-fog">What can I help with? <span className="text-accent">*</span></legend>
+        <div className="grid grid-cols-2 gap-3">
+          {ENQUIRY_SERVICES.map((item) => <label key={item.slug} className="cursor-pointer"><input type="radio" name="service" value={item.slug} checked={service === item.slug} onChange={() => { setService(item.slug); trackEvent("enquiry_service_selected", { service: item.slug }); }} required className="peer sr-only" aria-invalid={!!state.errors?.service} /><span className="block rounded-xl border border-line bg-ink-2/50 px-4 py-4 font-display text-sm text-fog transition-colors hover:border-fog peer-checked:border-volt peer-checked:bg-volt/10 peer-checked:text-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent">{item.label}</span></label>)}
+        </div>
+        {state.errors?.service && <p id="service-error" className="mt-2 text-sm text-ember">{state.errors.service}</p>}
+      </fieldset>
+
+      {selectedService && <div><label htmlFor="details" className="mb-2.5 block font-display text-[11px] uppercase tracking-[0.22em] text-fog">{selectedService.detail} <span className="normal-case tracking-normal">(optional)</span></label><input id="details" name="details" type="text" maxLength={500} defaultValue={state.values?.details} placeholder={selectedService.placeholder} className={`${fieldBase} ${state.errors?.details ? "border-ember" : "border-line"}`} aria-invalid={!!state.errors?.details} aria-describedby={state.errors?.details ? "details-error" : undefined} />{state.errors?.details && <p id="details-error" className="mt-2 text-sm text-ember">{state.errors.details}</p>}</div>}
+
       <fieldset>
         <legend className="mb-3 block font-display text-[11px] uppercase tracking-[0.22em] text-fog">
           Budget
@@ -185,7 +212,7 @@ export default function ContactForm() {
           htmlFor="message"
           className="mb-2.5 block font-display text-[11px] uppercase tracking-[0.22em] text-fog"
         >
-          What are you building?
+          {selectedService?.prompt ?? "Tell me what you need"}
         </label>
         <textarea
           id="message"
@@ -195,7 +222,7 @@ export default function ContactForm() {
           defaultValue={state.values?.message}
           aria-invalid={!!state.errors?.message}
           aria-describedby={state.errors?.message ? "message-error" : undefined}
-          placeholder="The problem, the deadline, and anything you already know about how it should work."
+          placeholder={selectedService?.hint ?? "The problem, the deadline, and anything you already know about how it should work."}
           className={`${fieldBase} resize-y ${
             state.errors?.message ? "border-ember" : "border-line"
           }`}

@@ -38,6 +38,7 @@ function ServiceCard({ s }: { s: Service }) {
     <motion.div variants={staggerItem} className="[perspective:1200px]">
       <motion.div
         ref={ref}
+        data-service-slug={s.slug}
         onPointerMove={onMove}
         onPointerLeave={onLeave}
         style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
@@ -97,11 +98,11 @@ function ServiceCard({ s }: { s: Service }) {
               </div>
             </div>
             <Link
-              href="/services"
+              href={`/contact?service=${s.slug}`}
               data-cursor="link"
               className="group/link inline-flex items-center gap-2 font-display text-sm text-fog transition-colors hover:text-accent"
             >
-              Details
+              Discuss this service
               <span className="sr-only"> about {s.title}</span>
               <svg
                 width="13"

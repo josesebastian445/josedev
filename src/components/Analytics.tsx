@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 /**
  * Google Analytics 4 and Google Tag Manager.
@@ -15,7 +16,7 @@ import Script from "next/script";
  * GTM noscript iframe. A missing entry does not throw anywhere a visitor would
  * notice; the tag is simply blocked and records nothing.
  */
-const GA_ID = "G-GBS2K2FYSS";
+const GA_ID = GA_MEASUREMENT_ID;
 const GTM_ID = "GTM-MKJP6947";
 
 /**

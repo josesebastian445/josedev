@@ -12,7 +12,7 @@ import { SITE } from "@/content/site";
 const STATS = [
   { v: "7+", k: "Years experience" },
   { v: "40+", k: "Projects delivered" },
-  { v: "99.9%", k: "Uptime maintained" },
+  { v: "4", k: "Connected service areas" },
 ];
 
 const STACK = ["WP", "Next", "Astro", "React", "SEO", "CF"];

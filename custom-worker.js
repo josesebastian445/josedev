@@ -78,7 +78,7 @@ async function sendContactEmail(request, env) {
     return new Response("Not found", { status: 404 });
   }
 
-  const { name, email, budget, message } = await request.json();
+  const { name, email, budget, message, service, details } = await request.json();
   const from = env.CONTACT_FROM_EMAIL;
   const to = env.CONTACT_TO_EMAIL;
   if (!from || !to) {
@@ -101,6 +101,8 @@ async function sendContactEmail(request, env) {
         `Name:    ${name}`,
         `Email:   ${email}`,
         `Budget:  ${budget || "not given"}`,
+        `Service: ${service || "not specified"}`,
+        `Context: ${details || "not provided"}`,
         "",
         message,
       ].join("\n"),

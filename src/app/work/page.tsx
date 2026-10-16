@@ -22,7 +22,7 @@ export default function WorkPage() {
         meta={[
           { label: "Engagements", value: String(PROJECTS.length) },
           { label: "Experience", value: "7+ years" },
-          { label: "Uptime maintained", value: "99.9%" },
+          { label: "Engagements featured", value: "2" },
           { label: "Based in", value: "Dubai, UAE" },
         ]}
       />

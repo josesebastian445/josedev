@@ -19,7 +19,9 @@ const DETAILS = [
   { label: "Reply time", value: SITE.replyTime },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage({ searchParams }: { searchParams: Promise<{ service?: string | string[] }> }) {
+  const query = await searchParams;
+  const initialService = typeof query.service === "string" ? query.service : "";
   return (
     <main>
       <PageHero
@@ -31,7 +33,7 @@ export default function ContactPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1400px] gap-16 px-6 md:px-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-24">
           <Reveal>
-            <ContactForm />
+            <ContactForm key={initialService} initialService={initialService} />
           </Reveal>
 
           <div className="lg:pt-4">

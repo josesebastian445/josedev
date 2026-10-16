@@ -59,6 +59,17 @@ export default async function CaseStudy({
       {/* hero artwork, scrubbed on scroll */}
       <ScrollReadout art={project.art} />
 
+      <section className="border-b border-line py-20 md:py-28" aria-labelledby="project-change-heading">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+          <p className="mb-4 font-display text-xs uppercase tracking-[.22em] text-accent">The work, in context</p>
+          <h2 id="project-change-heading" className="font-display text-3xl font-semibold tracking-tight md:text-4xl">The problem. My contribution. What changed.</h2>
+          <p className="mb-10 mt-4 max-w-2xl text-sm leading-relaxed text-fog">A breakdown of the scope and delivery described in this engagement. Performance improvements and commercial gains are not quantified here without supporting measurement.</p>
+          <div className="space-y-5">{project.changes.map((change) => <div key={change.area} className="rounded-2xl border border-line bg-ink-2/50 p-6 md:p-8"><h3 className="mb-6 font-display text-xl font-semibold">{change.area}</h3><dl className="grid gap-6 md:grid-cols-3">{[["The problem", change.before], ["My contribution", change.contribution], ["What changed", change.after]].map(([label, description]) => <div key={label}><dt className="mb-3 font-display text-xs uppercase tracking-wider text-accent">{label}</dt><dd className="text-sm leading-relaxed text-fog">{description}</dd></div>)}</dl></div>)}</div>
+          <Link href="/contact?service=web-design-development" className="mt-8 inline-flex text-sm text-accent underline underline-offset-4">Discuss a similar project ↗</Link>
+          {project.website && <a href={project.website} target="_blank" rel="noopener noreferrer" className="ml-0 mt-4 block text-sm text-bone underline underline-offset-4 md:ml-8 md:inline-flex">Visit the live website ↗</a>}
+        </div>
+      </section>
+
       {/* results */}
       <section className="border-b border-line py-20 md:py-28">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10">

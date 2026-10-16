@@ -19,8 +19,8 @@ npm run build && npm start
 | `/services` | Capabilities, pricing tiers, process, FAQ |
 | `/blog` | Writing index |
 | `/blog/[slug]` | Article, rendered from CMS blocks |
-| `/contact` | Contact form with validation and success state |
-| `/api/revalidate` | Cache invalidation from the CMS — the only dynamic route |
+| `/contact` | Dynamic contact form with service preselection, validation and delivery states |
+| `/api/revalidate` | Cache invalidation from the CMS |
 | `404` | Custom not-found |
 
 Everything else prerenders: 42 static routes, including a generated OpenGraph
@@ -127,11 +127,24 @@ To/from addresses are `vars` in `wrangler.jsonc`. Constraints from Cloudflare:
 the recipient must be a **verified destination address** on the account, and
 the sender must be on a domain with Email Routing enabled.
 
-> **Delivery silently degrades.** Outside the Workers runtime (plain
-> `next dev`) or with `CONTACT_INTERNAL_KEY` unset, a submission is validated
-> and logged to the server console, and the visitor still sees the success
-> state. Set the secret with `npx wrangler secret put CONTACT_INTERNAL_KEY`
-> before putting this in front of real traffic.
+> **Delivery configuration is required.** Outside the Workers runtime or with
+> `CONTACT_INTERNAL_KEY` unset, the form displays an error and offers direct
+> email instead of claiming delivery. Set the secret with
+> `npx wrangler secret put CONTACT_INTERNAL_KEY` before accepting enquiries.
+
+The contact form supports website development, SEO, maintenance and IT support.
+`/contact?service=<service-slug>` preselects a service. The validated service and
+optional website/team context are included in the delivery worker's email.
+
+The blog index searches article titles, excerpts and tags and filters by primary
+topic. Related articles rank shared tags and primary topic, then use publication
+date to break ties. The current article is excluded and up to three are shown.
+
+Custom GA4 service-interest and enquiry-funnel events are documented in
+[measurement and enquiry checks](docs/measurement-and-enquiries.md), including
+the live email test record and account-side report setup. Test locally with
+`node --test scripts/test-analytics.mjs`. The live email test script is
+separate and requires an explicit `--send` flag because it sends real messages.
 
 Note that `lib/contact.ts` holds the state type and initial value rather than
 `actions.ts`: a `"use server"` module may only export async functions, and

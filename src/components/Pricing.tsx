@@ -59,6 +59,7 @@ export default function Pricing() {
                 <div className="mt-1 font-display text-2xl font-bold tracking-tight md:text-3xl">
                   {s.price}
                 </div>
+                <Link href={`/contact?service=${s.slug}`} className="mt-3 inline-flex text-sm text-accent underline underline-offset-4">Enquire about this service ↗</Link>
               </div>
             </motion.div>
           ))}

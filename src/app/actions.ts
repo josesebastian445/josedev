@@ -2,6 +2,7 @@
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import type { ContactState } from "@/lib/contact";
+import { getEnquiryService } from "@/content/enquiries";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -13,10 +14,12 @@ export async function submitContact(
   const email = String(formData.get("email") ?? "").trim();
   const budget = String(formData.get("budget") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
+  const service = String(formData.get("service") ?? "").trim();
+  const details = String(formData.get("details") ?? "").trim();
   // honeypot: real people never fill a hidden field
   const trap = String(formData.get("company") ?? "").trim();
 
-  const values = { name, email, budget, message };
+  const values = { name, email, budget, message, service, details };
 
   if (trap) {
     // silently accept, so bots get no signal about what gave them away
@@ -24,6 +27,8 @@ export async function submitContact(
   }
 
   const errors: ContactState["errors"] = {};
+  if (!getEnquiryService(service)) errors.service = "Please choose the service you need.";
+  if (details.length > 500) errors.details = "Please keep these details under 500 characters.";
   if (name.length < 2) errors.name = "Please tell me your name.";
   if (!EMAIL.test(email)) errors.email = "That does not look like an email address.";
   if (message.length < 20)
@@ -37,9 +42,7 @@ export async function submitContact(
   // lives in custom-worker.js (cloudflare:email cannot be imported from
   // Next-bundled code), so we call back into our own worker through the
   // WORKER_SELF_REFERENCE service binding, authenticated with a shared secret.
-  // Outside the Workers runtime (plain `next dev`, missing secret) the
-  // submission is logged server-side and the visitor still gets a success
-  // state — see README before putting this in front of real traffic.
+  // Missing delivery configuration must produce an honest error state.
   let env: CloudflareEnv | undefined;
   try {
     env = getCloudflareContext().env;
@@ -50,11 +53,8 @@ export async function submitContact(
   const key = env?.CONTACT_INTERNAL_KEY;
 
   if (!worker || !key) {
-    console.warn(
-      "[contact] email delivery not configured — message logged, not delivered:",
-      { name, email, budget, message }
-    );
-    return { status: "success" };
+    console.warn("[contact] email delivery not configured");
+    return { status: "error", message: "Email delivery is unavailable right now. Please email me directly instead.", values };
   }
 
   try {
@@ -64,7 +64,7 @@ export async function submitContact(
         "Content-Type": "application/json",
         "x-internal-key": key,
       },
-      body: JSON.stringify({ name, email, budget, message }),
+      body: JSON.stringify({ name, email, budget, message, service: getEnquiryService(service)?.label, details }),
     });
 
     if (!res.ok) {

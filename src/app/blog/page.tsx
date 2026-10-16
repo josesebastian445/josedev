@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import CTABand from "@/components/CTABand";
-import { Stagger } from "@/components/motion-primitives";
-import PostRow from "@/components/PostRow";
+import BlogExplorer from "@/components/BlogExplorer";
+
 import { getPostSummaries } from "@/lib/posts";
 
 export const metadata: Metadata = {
@@ -26,11 +26,7 @@ export default async function BlogPage() {
 
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-          <Stagger className="border-t border-line" gap={0.07}>
-            {sorted.map((post) => (
-              <PostRow key={post.slug} post={post} />
-            ))}
-          </Stagger>
+          <BlogExplorer posts={sorted} />
 
           <p className="mt-16 max-w-lg text-sm leading-relaxed text-fog">
             Posts land every few weeks.{" "}
